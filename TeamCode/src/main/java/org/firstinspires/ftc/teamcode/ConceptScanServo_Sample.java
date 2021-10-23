@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * This OpMode scans a single servo back and forwards until Stop is pressed.
@@ -52,15 +53,22 @@ import com.qualcomm.robotcore.hardware.Servo;
 //@Disabled
 public class ConceptScanServo_Sample extends LinearOpMode {
 
-    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final int    CYCLE_MS    =   50;     // period of each cycle
-    static final double MAX_POS     =  1.0;     // Maximum rotational position
-    static final double MIN_POS     =  0.0;     // Minimum rotational position
+    static final double INCREMENT   = 0.005;     // amount to slew servo each CYCLE_MS cycle
+    static final int    CYCLE_MS    =   1000;     // period of each cycle
+    static final double MAX_POS     =  0.6;     // Maximum rotational position
+    static final double MIN_POS     =  0.4;     // Minimum rotational position
 
     // Define class members
-    Servo   servo;
-    double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+    Servo  servo;
+    double  position = 0.5;
+
+
+
+
+            ;
+ //   double  position = 0.7; // Start at halfway position
     boolean rampUp = true;
+
 
 
     @Override
@@ -69,7 +77,7 @@ public class ConceptScanServo_Sample extends LinearOpMode {
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
         servo = hardwareMap.get(Servo.class, "TestServo");
-
+        servo.setPosition(position);
         // Wait for the start button
         telemetry.addData(">", "Press Start to scan Servo." );
         telemetry.update();
@@ -79,33 +87,68 @@ public class ConceptScanServo_Sample extends LinearOpMode {
         // Scan servo till stop pressed.
         while(opModeIsActive()){
 
-            // slew the servo, according to the rampUp (direction) variable.
-            if (rampUp) {
-                // Keep stepping up until we hit the max value.
-                position += INCREMENT ;
-                if (position >= MAX_POS ) {
-                    position = MAX_POS;
-                    rampUp = !rampUp;   // Switch ramp direction
-                }
-            }
-            else {
-                // Keep stepping down until we hit the min value.
-                position -= INCREMENT ;
-                if (position <= MIN_POS ) {
-                    position = MIN_POS;
-                    rampUp = !rampUp;  // Switch ramp direction
-                }
-            }
+
+          //  double drive = (gamepad1.left_stick_y);
 
             // Display the current value
             telemetry.addData("Servo Position", "%5.2f", position);
             telemetry.addData(">", "Press Stop to end test." );
             telemetry.update();
 
-            // Set the servo to the new position and pause;
-            servo.setPosition(position);
-            sleep(CYCLE_MS);
-            idle();
+            // Choose to drive using either Tank Mode, or POV Mode
+            // Comment out the method that's not used.  The default below is POV.
+
+
+           // double servoPower    = Range.clip(drive, 0, 1) ;
+           // position = servoPower;
+            if (gamepad1.a) {
+                position=0.8;
+                servo.setPosition(position);
+                servo.close();
+                // Display the current value
+                telemetry.addData("Servo Position", "%5.2f", position);
+                telemetry.addData(">", "Press Stop to end test." );
+                telemetry.update();
+            }
+
+            if (gamepad1.b) {
+                position=0.55;
+                servo.setPosition(position);
+                servo.close();
+                // Display the current value
+                telemetry.addData("Servo Position", "%5.2f", position);
+                telemetry.addData(">", "Press Stop to end test." );
+                telemetry.update();
+            }
+
+            if (gamepad1.x) {
+                position=servo.getPosition();
+                // Display the current value
+                telemetry.addData("Servo Position", "%5.2f", position);
+                telemetry.addData(">", "Press Stop to end test." );
+                telemetry.update();
+            }
+            /*
+
+                // slew the servo, according to the rampUp (direction) variable.
+                if (rampUp) {
+                    // Keep stepping up until we hit the max value.
+                    position += INCREMENT ;
+                    if (position >= MAX_POS ) {
+                        position = MAX_POS;
+                        rampUp = !rampUp;   // Switch ramp direction
+                    }
+                }
+                else {
+                    // Keep stepping down until we hit the min value.
+                    position -= INCREMENT ;
+                    if (position <= MIN_POS ) {
+                        position = MIN_POS;
+                        rampUp = !rampUp;  // Switch ramp direction
+                    }
+                }
+*/
+
         }
 
         // Signal done;
