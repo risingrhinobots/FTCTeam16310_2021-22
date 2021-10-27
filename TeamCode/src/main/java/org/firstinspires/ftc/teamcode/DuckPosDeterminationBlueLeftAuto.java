@@ -145,6 +145,14 @@ public class DuckPosDeterminationBlueLeftAuto extends LinearOpMode {
             telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.update();
+
+
+            //Drive forward to the target BOX
+
+
+
+
+
         }
 
         /*

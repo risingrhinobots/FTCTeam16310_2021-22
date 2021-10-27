@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -102,7 +103,7 @@ public class ConceptScanServo_Sample extends LinearOpMode {
            // double servoPower    = Range.clip(drive, 0, 1) ;
            // position = servoPower;
             if (gamepad1.a) {
-                position=0.8;
+                position=0.95   ;
                 servo.setPosition(position);
                 servo.close();
                 // Display the current value

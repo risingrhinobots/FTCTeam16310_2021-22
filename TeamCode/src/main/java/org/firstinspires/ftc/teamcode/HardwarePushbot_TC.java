@@ -92,7 +92,7 @@ public class HardwarePushbot_TC
         frontRight = hwMap.get(DcMotorEx.class, "FrontRight");
         backLeft =  hwMap.get(DcMotorEx.class, "BackLeft");
         backRight = hwMap.get(DcMotorEx.class, "BackRight");
-        CarouselDrive = hwMap.get(Servo.class, "CarouselDrive");
+    //    CarouselDrive = hwMap.get(Servo.class, "CarouselDrive");
        // ArmMotor = hwMap.get(DcMotorEx.class, "ArmMotor");
         /* Define and Initialize Motors
         leftShooter  = hwMap.get(DcMotorEx.class, "LeftShooter");
@@ -112,7 +112,7 @@ public class HardwarePushbot_TC
         frontLeft.setDirection(DcMotorEx.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         frontRight.setDirection(DcMotorEx.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         backLeft.setDirection(DcMotorEx.Direction.REVERSE);
-        backRight.setDirection(DcMotorEx.Direction.FORWARD);
+        backRight.setDirection(DcMotorEx.Direction.REVERSE);
 
 
 

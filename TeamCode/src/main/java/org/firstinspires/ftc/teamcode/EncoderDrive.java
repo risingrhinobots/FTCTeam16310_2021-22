@@ -36,7 +36,6 @@ public class EncoderDrive extends LinearOpMode {
     this.timeoutS = timeoutS;
     */
     public void encoderDrive(double speed, double frontleftInches, double frontrightInches, double backleftInches, double backrightInches, double timeoutS)
-
     {
         int newfrontLeftTarget;
         int newfrontRightTarget;

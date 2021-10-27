@@ -23,7 +23,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-//import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -39,11 +40,21 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Autonomous(name = "Concept: Basic Duck Detection", group = "Concept")
+@Autonomous(name = "Concept: RedLeft_Run", group = "Concept")
 //@Disabled
-public class DuckPosDetermination extends LinearOpMode {
+public class DuckPosDetermination_RedLeft extends LinearOpMode {
     OpenCvWebcam webcam;
     DuckPosDeterminationPipeline pipeline;
+    HardwarePushbot_TC robot   = new HardwarePushbot_TC();
+    private ElapsedTime runtime = new ElapsedTime();
+
+    static final double     COUNTS_PER_MOTOR_REV    = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1;   // 1  // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_SPEED             = 0.5;
+    static final double     TURN_SPEED              = 0.3;
 
     @Override
     public void runOpMode() {
@@ -126,6 +137,15 @@ public class DuckPosDetermination extends LinearOpMode {
             telemetry.update();
 
 
+            EncoderDrive(DRIVE_SPEED, 10,10,10,10, 5);
+            // S1: Forward 50 Inches with 5 Sec timeout
+            //following is an example of left turn
+            // encoderDrive(TURN_SPEED,-10,10,-10,10,4);
+            //following is an example of right turn
+            //turn right since this is blue corner to drop the wobble from the back of the robot
+           // EncoderDrive(TURN_SPEED,12,-12,12,-12,4);  // S2: Turn Right 12 Inches with 4 Sec timeout
+            //after turning drive backwords so that the wobble can be dropped in the target
+//        encoderDrive(DRIVE_SPEED,-20,-20,-20,-20,4);  // S2: Turn Right 12 Inches with 4 Sec timeout
         }
 
         /*
@@ -139,7 +159,7 @@ public class DuckPosDetermination extends LinearOpMode {
     public static class DuckPosDeterminationPipeline extends OpenCvPipeline
     {
         /*
-         * An enum to define the skystone position
+         * An enum to define the Duck position
          */
         public Telemetry telemetry;
         public enum DuckPosition
@@ -220,10 +240,10 @@ public class DuckPosDetermination extends LinearOpMode {
 
 
         // Volatile since accessed by OpMode thread w/o synchronization
-        private volatile DuckPosDeterminationPipeline.DuckPosition position;
+        private volatile DuckPosition position;
 
         {
-            position = DuckPosDeterminationPipeline.DuckPosition.LEFT;
+            position = DuckPosition.LEFT;
         }
 
         /*
@@ -362,7 +382,7 @@ public class DuckPosDetermination extends LinearOpMode {
              */
             if(min == avg1) // Was it from region 1?
             {
-                position = DuckPosDeterminationPipeline.DuckPosition.LEFT; // Record our analysis
+                position = DuckPosition.LEFT; // Record our analysis
 
                 /*
                  * Draw a solid rectangle on top of the chosen region.
@@ -377,7 +397,7 @@ public class DuckPosDetermination extends LinearOpMode {
             }
             else if(min == avg2) // Was it from region 2?
             {
-                position = DuckPosDeterminationPipeline.DuckPosition.CENTER; // Record our analysis
+                position = DuckPosition.CENTER; // Record our analysis
 
                 /*
                  * Draw a solid rectangle on top of the chosen region.
@@ -392,7 +412,7 @@ public class DuckPosDetermination extends LinearOpMode {
             }
             else if(min == avg3) // Was it from region 3?
             {
-                position = DuckPosDeterminationPipeline.DuckPosition.RIGHT; // Record our analysis
+                position = DuckPosition.RIGHT; // Record our analysis
 
                 /*
                  * Draw a solid rectangle on top of the chosen region.
@@ -407,7 +427,7 @@ public class DuckPosDetermination extends LinearOpMode {
             }
             else if(min < avg1) // Was it from region 3?
             {
-                position = DuckPosDeterminationPipeline.DuckPosition.NODUCK; // Record our analysis
+                position = DuckPosition.NODUCK; // Record our analysis
 
             }
 
@@ -423,10 +443,81 @@ public class DuckPosDetermination extends LinearOpMode {
         /*
          * Call this from the OpMode thread to obtain the latest analysis
          */
-        public DuckPosDeterminationPipeline.DuckPosition getAnalysis()
+        public DuckPosition getAnalysis()
         {
             return position;
         }
     }
+
+    public void EncoderDrive(double speed, double frontleftInches, double frontrightInches, double backleftInches, double backrightInches, double timeoutS)
+    {
+        int newfrontLeftTarget;
+        int newfrontRightTarget;
+        int newbackLeftTarget;
+        int newbackRightTarget;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newfrontLeftTarget = robot.frontLeft.getCurrentPosition() + (int) (frontleftInches * COUNTS_PER_INCH);
+            newfrontRightTarget = robot.frontRight.getCurrentPosition() + (int) (frontrightInches * COUNTS_PER_INCH);
+            newbackLeftTarget = robot.backLeft.getCurrentPosition() + (int) (backleftInches * COUNTS_PER_INCH);
+            newbackRightTarget = robot.backRight.getCurrentPosition() + (int) (backrightInches * COUNTS_PER_INCH);
+
+            robot.frontLeft.setTargetPosition(newfrontLeftTarget);
+            robot.frontRight.setTargetPosition(newfrontRightTarget);
+            robot.backLeft.setTargetPosition(newbackLeftTarget);
+            robot.backRight.setTargetPosition(newbackRightTarget);
+
+            // Turn On RUN_TO_POSITION
+            robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            robot.frontLeft.setPower(Math.abs(speed));
+            robot.frontRight.setPower(Math.abs(speed));
+            robot.backLeft.setPower(Math.abs(speed));
+            robot.backRight.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (robot.frontLeft.isBusy() && robot.frontRight.isBusy() &&
+                            robot.backRight.isBusy() && robot.backLeft.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", newfrontLeftTarget, newfrontRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
+                        robot.frontLeft.getCurrentPosition(),
+                        robot.frontRight.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            robot.frontLeft.setPower(0);
+            robot.frontRight.setPower(0);
+            robot.backLeft.setPower(0);
+            robot.backRight.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //  sleep(250);   // optional pause after each move
+
+        }
+    }
+
+
 
 }
