@@ -136,6 +136,7 @@ public class DuckPosDetermination extends LinearOpMode {
         sleep(100);
     }
 
+
     public static class DuckPosDeterminationPipeline extends OpenCvPipeline
     {
         /*

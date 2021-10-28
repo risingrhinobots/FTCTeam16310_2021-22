@@ -135,18 +135,38 @@ public class DuckPosDetermination_RedLeft extends LinearOpMode {
             telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.update();
+            robot.init(hardwareMap);
+            // Send telemetry message to signify robot waiting;
+            telemetry.addData("Status", "Resetting Encoders");    //
+            telemetry.update();
+            robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            if(pipeline.getAnalysis() == DuckPosDeterminationPipeline.DuckPosition.LEFT){
+                EncoderDriveInLine( DRIVE_SPEED, 2,2,2,2, 5);
+                sleep(100);
+                EncoderDriveInLine(TURN_SPEED,-10,10,-10,10,4);
+                sleep(100);
+            }
 
-
-            EncoderDrive(DRIVE_SPEED, 10,10,10,10, 5);
+//            EncoderDriveInLine( DRIVE_SPEED, 2,2,2,2, 5);
             // S1: Forward 50 Inches with 5 Sec timeout
             //following is an example of left turn
-            // encoderDrive(TURN_SPEED,-10,10,-10,10,4);
+          /*  sleep(100);
+            EncoderDriveInLine(TURN_SPEED,-10,10,-10,10,4);
             //following is an example of right turn
             //turn right since this is blue corner to drop the wobble from the back of the robot
            // EncoderDrive(TURN_SPEED,12,-12,12,-12,4);  // S2: Turn Right 12 Inches with 4 Sec timeout
             //after turning drive backwords so that the wobble can be dropped in the target
 //        encoderDrive(DRIVE_SPEED,-20,-20,-20,-20,4);  // S2: Turn Right 12 Inches with 4 Sec timeout
+            break;*/
         }
+
 
         /*
          * For the purposes of this sample, throttle ourselves to 10Hz loop to avoid burning
@@ -449,7 +469,7 @@ public class DuckPosDetermination_RedLeft extends LinearOpMode {
         }
     }
 
-    public void EncoderDrive(double speed, double frontleftInches, double frontrightInches, double backleftInches, double backrightInches, double timeoutS)
+    public void EncoderDriveInLine(double speed, double frontleftInches, double frontrightInches, double backleftInches, double backrightInches, double timeoutS)
     {
         int newfrontLeftTarget;
         int newfrontRightTarget;
