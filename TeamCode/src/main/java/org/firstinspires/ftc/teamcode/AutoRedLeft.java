@@ -73,9 +73,9 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="AutoBlueRight", group="FreightFrenzy")
+@Autonomous(name="AutoRedLeft", group="FreightFrenzy")
 //@Disabled
-public class AutoBlueRight extends LinearOpMode {
+public class AutoRedLeft extends LinearOpMode {
 
     /* Declare OpMode members. */
     EncoderDrive encoderDrive = new EncoderDrive();
