@@ -65,7 +65,7 @@ public class HardwarePushbot_TC
     //public DcMotorEx  conveyor = null;
     //public DcMotorEx  intake = null;
     public Servo  CarouselDrive = null;
-    //public DcMotorEx ArmMotor = null;
+    public DcMotorEx ArmMotor = null;
     //public Servo gripServo = null;
     // public Servo guideServo=null;
     //public Servo   gateServo;

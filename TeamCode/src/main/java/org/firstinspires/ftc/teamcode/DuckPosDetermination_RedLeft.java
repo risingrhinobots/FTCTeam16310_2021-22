@@ -147,15 +147,12 @@ public class DuckPosDetermination_RedLeft extends LinearOpMode {
             robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            if (true) {
-           // if(pipeline.getAnalysis() == DuckPosDeterminationPipeline.DuckPosition.LEFT){
-
+            if(pipeline.getAnalysis() == DuckPosDeterminationPipeline.DuckPosition.LEFT){
                 EncoderDriveInLine( DRIVE_SPEED, 2,2,2,2, 5);
                 sleep(100);
                 EncoderDriveInLine(TURN_SPEED,-10,10,-10,10,4);
                 sleep(100);
             }
-            break;
 
 //            EncoderDriveInLine( DRIVE_SPEED, 2,2,2,2, 5);
             // S1: Forward 50 Inches with 5 Sec timeout
