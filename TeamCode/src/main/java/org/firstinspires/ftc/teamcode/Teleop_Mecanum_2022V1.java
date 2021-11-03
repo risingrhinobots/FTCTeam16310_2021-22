@@ -49,10 +49,10 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -71,9 +71,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeleopMecanum", group="Concept")
+@TeleOp(name="TeleopMecanum_2022_V1", group="2022")
 //@Disabled
-public class Teleop_Mecanum extends LinearOpMode {
+public class Teleop_Mecanum_2022V1 extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -81,6 +81,17 @@ public class Teleop_Mecanum extends LinearOpMode {
     private DcMotor FrontRightDrive = null;
     private DcMotor BackLeftDrive = null;
     private DcMotor BackRightDrive = null;
+    private CRServo CarouselServo = null;
+    private Servo ClawServo = null;
+
+    static final double INCREMENT   = 0.005;     // amount to slew servo each CYCLE_MS cycle
+    static final int    CYCLE_MS    =   1000;     // period of each cycle
+    static final double MAX_POS     =  0.6;     // Maximum rotational position
+    static final double MIN_POS     =  0.4;     // Minimum rotational position
+
+    // Define class members
+
+    double  position = 0.5;
 
 
     @Override
@@ -95,7 +106,8 @@ public class Teleop_Mecanum extends LinearOpMode {
         FrontRightDrive = hardwareMap.get(DcMotor.class, "FrontRight");
         BackLeftDrive = hardwareMap.get(DcMotor.class,"BackLeft");
         BackRightDrive = hardwareMap.get(DcMotor.class,"BackRight");
-       // CarouselDrive = hardwareMap.get(Servo.class, "CarouselDrive");
+        ClawServo = hardwareMap.get(Servo.class, "Claw");
+        CarouselServo = hardwareMap.get(CRServo.class, "Carousel");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -148,7 +160,39 @@ public class Teleop_Mecanum extends LinearOpMode {
             BackLeftDrive.setPower(BackLeftPower);
             BackRightDrive.setPower(BackRightPower);
 
+            // position = servoPower;
+            if (gamepad1.a) {
+                position=0.60;
+                ClawServo.setPosition(position);
 
+                // Display the current value
+                telemetry.addData("Servo Position", "%5.2f", position);
+                telemetry.addData(">", "Press Stop to end test." );
+                telemetry.update();
+            }
+
+            if (gamepad1.b) {
+                position=0.35;
+                ClawServo.setPosition(position);
+
+                // Display the current value
+                telemetry.addData("Servo Position", "%5.2f", position);
+                telemetry.addData(">", "Press Stop to end test." );
+                telemetry.update();
+            }
+            // slew the servo, according to the rampUp (direction) variable.
+            if (gamepad1.y) {
+                // Keep stepping up until we hit the max value.
+                position = 0 ; //stop
+                CarouselServo.setPower(position);
+            }
+
+            if (gamepad1.x) {
+                // Keep stepping up until we hit the max value.
+                position = -1 ; //rotate right
+                CarouselServo.setPower(position);
+
+            }
 
 
 
