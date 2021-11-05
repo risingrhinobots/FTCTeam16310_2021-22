@@ -76,12 +76,14 @@ import com.qualcomm.robotcore.util.Range;
 public class Teleop_Mecanum_2022V1 extends LinearOpMode {
 
     // Declare OpMode members.
+    HardwarePushbot_TC robot = new HardwarePushbot_TC();
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor FrontLeftDrive = null;
     private DcMotor FrontRightDrive = null;
     private DcMotor BackLeftDrive = null;
     private DcMotor BackRightDrive = null;
     private CRServo CarouselServo = null;
+    private DcMotor ArmMotor = null;
     private Servo ClawServo = null;
 
     static final double INCREMENT   = 0.005;     // amount to slew servo each CYCLE_MS cycle
@@ -102,6 +104,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
+        ArmMotor = hardwareMap.get(DcMotor.class, "ArmMotor");
         FrontLeftDrive  = hardwareMap.get(DcMotor.class, "FrontLeft");
         FrontRightDrive = hardwareMap.get(DcMotor.class, "FrontRight");
         BackLeftDrive = hardwareMap.get(DcMotor.class,"BackLeft");
@@ -115,6 +118,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
         FrontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         BackLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         BackRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        robot.ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
