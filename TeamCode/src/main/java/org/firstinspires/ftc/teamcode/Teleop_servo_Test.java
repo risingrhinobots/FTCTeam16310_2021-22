@@ -79,7 +79,7 @@ public class Teleop_servo_Test extends LinearOpMode {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         servo = hardwareMap.get(Servo.class, "TestServo");
-        servo.setPosition(0.2);
+        servo.setPosition(0.6);
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -108,22 +108,23 @@ public class Teleop_servo_Test extends LinearOpMode {
                 position += INCREMENT;
                 if (position >= MAX_POS) {
                     position = MAX_POS;
-                    servo.setPosition(position);
-
-                } else if (gamepad1.b) {
-                    position -= INCREMENT;
-                    if (position <= MIN_POS) {
-                        position = MIN_POS;
-                        servo.setPosition(position);
+                }
+            }
+            else if (gamepad1.b) {
+                position -= INCREMENT;
+                if (position <= MIN_POS) {
+                    position = MIN_POS;
                     }
+            }
+            servo.setPosition(position);
                     // Display the current value
                     telemetry.addData("Servo Position", "%5.2f", position);
                     telemetry.addData(">", "Press Stop to end test.");
                     telemetry.update();
 
-                }
+
             }
 
         }
-    }
+
 }

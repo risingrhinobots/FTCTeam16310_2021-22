@@ -53,6 +53,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -71,11 +72,12 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeleopMecanum_2022_V1", group="2022")
+@TeleOp(name="TeleopMecanum_2022_V3", group="2022")
 //@Disabled
 public class Teleop_Mecanum_2022V1 extends LinearOpMode {
 
     // Declare OpMode members.
+    EncoderDriveArm encoderDriveArm = new EncoderDriveArm();
     HardwarePushbot_TC robot = new HardwarePushbot_TC();
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor FrontLeftDrive = null;
@@ -85,15 +87,23 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     private CRServo CarouselServo = null;
     private DcMotor ArmMotor = null;
     private Servo ClawServo = null;
-
-    static final double INCREMENT   = 0.005;     // amount to slew servo each CYCLE_MS cycle
-    static final int    CYCLE_MS    =   1000;     // period of each cycle
-    static final double MAX_POS     =  0.6;     // Maximum rotational position
-    static final double MIN_POS     =  0.4;     // Minimum rotational position
-
+    private Servo ClawReachServo = null;
+    static final double COUNTS_PER_MOTOR_REV = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 1;   // 1  // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 5.25;     // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double DRIVE_SPEED = 0.3;
+    static final double INCREMENT = 0.005;     // amount to slew servo each CYCLE_MS cycle
+    static final int CYCLE_MS = 1000;     // period of each cycle
+    static final double MAX_POS = 0.6;     // Maximum rotational position
+    static final double MIN_POS = 0.4;     // Minimum rotational position
+    static final double CLAW_MAX_POS = 0.75;     // Maximum rotational position
+    static final double CLAW_MIN_POS = 0.95;     // Minimum rotational position
     // Define class members
 
-    double  position = 0.5;
+    double position = 0.6;
+    double ClawReachPosition = 0.3;
 
 
     @Override
@@ -105,20 +115,27 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         ArmMotor = hardwareMap.get(DcMotor.class, "ArmMotor");
-        FrontLeftDrive  = hardwareMap.get(DcMotor.class, "FrontLeft");
+        ArmMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        FrontLeftDrive = hardwareMap.get(DcMotor.class, "FrontLeft");
         FrontRightDrive = hardwareMap.get(DcMotor.class, "FrontRight");
-        BackLeftDrive = hardwareMap.get(DcMotor.class,"BackLeft");
-        BackRightDrive = hardwareMap.get(DcMotor.class,"BackRight");
+        BackLeftDrive = hardwareMap.get(DcMotor.class, "BackLeft");
+        BackRightDrive = hardwareMap.get(DcMotor.class, "BackRight");
         ClawServo = hardwareMap.get(Servo.class, "Claw");
+        ClawReachServo = hardwareMap.get(Servo.class, "ClawReach");
         CarouselServo = hardwareMap.get(CRServo.class, "Carousel");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
+
+
         FrontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         FrontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         BackLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        BackRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        robot.ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        ArmMotor.setDirection(DcMotor.Direction.REVERSE);
+        ClawReachServo.setPosition(ClawReachPosition);
+        ClawServo.setPosition(position);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -132,25 +149,26 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             double FrontRightPower;
             double BackLeftPower;
             double BackRightPower;
+            double ArmPower;
+
+            double drive= 0;
+            double turn =0;
+            double strafe = 0;
 
 
-            double drive = 0.9*(gamepad1.left_stick_y);
-            double turn  =  0.7 * (-gamepad1.right_stick_x);
-            double strafe = 0.9*(-gamepad1.left_stick_x);
+            drive =   (-gamepad1.left_stick_y);
+            turn  =  (gamepad1.left_stick_x);
+            strafe =  (gamepad1.right_stick_x);
 
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
+            double denominator = Math.max(Math.abs(drive)+Math.abs(turn)+Math.abs(strafe),1);
 
-
-            FrontLeftPower    = Range.clip(-drive - turn - strafe, -1, 1) ;
-            FrontRightPower   = Range.clip(-drive + turn + strafe, -1, 1) ;
-            BackLeftPower    = Range.clip(-drive - turn + strafe, -1, 1) ;
-            BackRightPower   = Range.clip(-drive + turn - strafe, -1, 1) ;
-
-
-
-
+            FrontLeftPower    = Range.clip(drive + turn + strafe, -1, 1) ;
+            BackLeftPower    = Range.clip(drive - turn + strafe, -1, 1) ;
+            FrontRightPower   = Range.clip(drive - turn - strafe, -1, 1) ;
+            BackRightPower   = Range.clip(drive + turn - strafe, -1, 1) ;
 
 
             // Tank Mode uses one stick to control each wheel.
@@ -164,47 +182,125 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             BackLeftDrive.setPower(BackLeftPower);
             BackRightDrive.setPower(BackRightPower);
 
+
+            if (gamepad1.dpad_up) {
+                InLineEncoderDriveArm(ArmMotor, 0.1, -2, 5);
+            }
+            if (gamepad1.dpad_down) {
+                InLineEncoderDriveArm(ArmMotor, 0.1, 2, 5);
+            }
+
             // position = servoPower;
             if (gamepad1.a) {
-                position=0.60;
+                position = 0.65;
                 ClawServo.setPosition(position);
 
                 // Display the current value
                 telemetry.addData("Servo Position", "%5.2f", position);
-                telemetry.addData(">", "Press Stop to end test." );
+                telemetry.addData(">", "Press Stop to end test.");
                 telemetry.update();
             }
 
             if (gamepad1.b) {
-                position=0.35;
+                position = 0.40;
                 ClawServo.setPosition(position);
 
                 // Display the current value
                 telemetry.addData("Servo Position", "%5.2f", position);
-                telemetry.addData(">", "Press Stop to end test." );
+                telemetry.addData(">", "Press Stop to end test.");
                 telemetry.update();
             }
+
+
+            if (gamepad2.x) {
+                ClawReachPosition = 0.80;
+                ClawReachServo.setPosition(ClawReachPosition);
+            }
+            if (gamepad2.y) {
+                ClawReachPosition = 0.75;
+                ClawReachServo.setPosition(ClawReachPosition);
+            }
+
+            if (gamepad2.dpad_up) {
+                // Keep stepping up until we hit the max value.
+                // Keep stepping up until we hit the max value.
+                ClawReachPosition += INCREMENT;
+                if (ClawReachPosition >= CLAW_MAX_POS) {
+                    ClawReachPosition = CLAW_MAX_POS;
+                }
+                ClawReachServo.setPosition(ClawReachPosition);
+            }
+            else if (gamepad2.dpad_down) {
+                ClawReachPosition -= INCREMENT;
+                if (ClawReachPosition <= CLAW_MIN_POS) {
+                    ClawReachPosition = CLAW_MIN_POS;
+                }
+                ClawReachServo.setPosition(ClawReachPosition);
+            }
+
+
+
+            // Display the current value
+            telemetry.addData("Servo Position", "%5.2f", ClawReachPosition);
+            telemetry.addData(">", "Press Stop to end test.");
+            telemetry.update();
             // slew the servo, according to the rampUp (direction) variable.
             if (gamepad1.y) {
                 // Keep stepping up until we hit the max value.
-                position = 0 ; //stop
+                position = 0; //stop
                 CarouselServo.setPower(position);
             }
 
             if (gamepad1.x) {
                 // Keep stepping up until we hit the max value.
-                position = -1 ; //rotate right
+                position = -1; //rotate right
                 CarouselServo.setPower(position);
 
             }
 
 
-
-
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "Frontleft (%.2f), Frontright (%.2f), Backleft (%.2f), Backright (%.2f)", FrontLeftPower, FrontRightPower, BackLeftPower,BackRightPower);
+            telemetry.addData("Motors", "Frontleft (%.2f), Frontright (%.2f), Backleft (%.2f), Backright (%.2f)", FrontLeftPower, FrontRightPower, BackLeftPower, BackRightPower);
             telemetry.update();
         }
     }
+
+
+    public void InLineEncoderDriveArm(DcMotor ArmMotor, double speed, double armmovement, double timeoutS) {
+        int newArmTarget;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newArmTarget = ArmMotor.getCurrentPosition() + (int) (armmovement * COUNTS_PER_INCH);
+            ArmMotor.setPower(Math.abs(speed));
+            ArmMotor.setTargetPosition(newArmTarget);
+
+            // Turn On RUN_TO_POSITION
+            ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) && ArmMotor.isBusy()) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d ", newArmTarget);
+                telemetry.addData("Path2", "Running at %7d ", ArmMotor.getCurrentPosition());
+
+                telemetry.update();
+            }
+
+            sleep(250);   // optional pause after each move
+
+        }
+    }
 }
+
+
