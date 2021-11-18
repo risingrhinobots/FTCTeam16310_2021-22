@@ -36,7 +36,7 @@ For technical questions regarding the Control System or the FTC SDK, please visi
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[FTC Technology Forum](https://ftcforum.firstinspires.org/forum/ftc-technology)
 
-### TEAM WEBSITE
+### Team Website
 Visit our website to learn more about our team: https://www.risingrhinobots.com/
 
 
