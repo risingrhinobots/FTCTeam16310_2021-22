@@ -35,3 +35,8 @@ The Javadoc reference documentation for the FTC SDK is now available online.  Cl
 For technical questions regarding the Control System or the FTC SDK, please visit the FTC Technology forum:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[FTC Technology Forum](https://ftcforum.firstinspires.org/forum/ftc-technology)
+
+### TEAM WEBSITE
+Visit our website to learn more about our team: https://www.risingrhinobots.com/
+
+
