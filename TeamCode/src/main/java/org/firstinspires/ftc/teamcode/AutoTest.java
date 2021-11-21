@@ -36,12 +36,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.DuckPosDetermination;
 
-import org.firstinspires.ftc.teamcode.DuckPosDetermination.DuckPosDeterminationPipeline;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.DuckPosDetermination.*;
 import org.firstinspires.ftc.teamcode.HardwarePushbot_TC;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvWebcam;
-import org.openftc.easyopencv.OpenCvPipeline;
 
 
 //import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -92,12 +93,8 @@ public class AutoTest<pipeline> extends LinearOpMode {
     double position = 0.7;
     double CarouselPosition =0;
     double ClawReachPosition = 0.3;
-/*    OpenCvWebcam webcam;
+    OpenCvWebcam webcam;
     DuckPosDeterminationPipeline pipeline;
-
-    pipeline = new DuckPosDeterminationPipeline();
-    webcam.setPipeline(pipeline);
-*/
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -106,9 +103,12 @@ public class AutoTest<pipeline> extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        pipeline = new DuckPosDeterminationPipeline();
+        webcam.setPipeline(pipeline);
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.addData("Status", "Resetting Encoders and Setting up webcam pipeline");    //
         telemetry.update();
 
        /* robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -168,8 +168,16 @@ public class AutoTest<pipeline> extends LinearOpMode {
         ClawReachPosition = 0.80;
         robot.ClawReachServo.setPosition(ClawReachPosition);
         sleep(500);
-        //position arm for delivery
+        //position arm for delivery based on duck position
+        if(pipeline.getAnalysis() == DuckPosDeterminationPipeline.DuckPosition.LEFT){
         encoderDriveArmInLine(robot.ArmMotor, 0.1, -2, 5);
+        }
+        if(pipeline.getAnalysis() == DuckPosDeterminationPipeline.DuckPosition.CENTER){
+            encoderDriveArmInLine(robot.ArmMotor, 0.1, -4, 7);
+        }
+        if(pipeline.getAnalysis() == DuckPosDeterminationPipeline.DuckPosition.RIGHT){
+            encoderDriveArmInLine(robot.ArmMotor, 0.1, -6, 9);
+        }
         sleep(500);
         //open the claw up so that the frieght drops on the alliance hub
         position = 0.40;
