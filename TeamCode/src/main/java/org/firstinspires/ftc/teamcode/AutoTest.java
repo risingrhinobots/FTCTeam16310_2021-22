@@ -42,6 +42,7 @@ import org.firstinspires.ftc.teamcode.DuckPosDetermination.*;
 import org.firstinspires.ftc.teamcode.HardwarePushbot_TC;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 
@@ -107,7 +108,20 @@ public class AutoTest<pipeline> extends LinearOpMode {
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         pipeline = new DuckPosDeterminationPipeline();
         webcam.setPipeline(pipeline);
-        // Send telemetry message to signify robot waiting;
+        webcam.setMillisecondsPermissionTimeout(2500);
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("Status", "Error: %7d", errorCode);
+                telemetry.update();
+            }
+        });
+
+// Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders and Setting up webcam pipeline");    //
         telemetry.update();
 
