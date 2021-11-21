@@ -72,12 +72,12 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeleopMecanum_2022_V3", group="2022")
+@TeleOp(name="TeleopMecanum_2022_V1", group="2022")
 //@Disabled
 public class Teleop_Mecanum_2022V1 extends LinearOpMode {
 
     // Declare OpMode members.
-    EncoderDriveArm encoderDriveArm = new EncoderDriveArm();
+   // EncoderDriveArm encoderDriveArm = new EncoderDriveArm();
     HardwarePushbot_TC robot = new HardwarePushbot_TC();
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor FrontLeftDrive = null;
@@ -102,8 +102,8 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     static final double CLAW_MIN_POS = 0.95;     // Minimum rotational position
     // Define class members
 
-    double position = 0.6;
-    double ClawReachPosition = 0.3;
+    double position = 0.65;  //claw to be closed
+    double ClawReachPosition = 0.3;  // this position is for the claw to be full closed in
 
 
     @Override
@@ -128,10 +128,10 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
         // Reverse the motor that runs backwards when connected directly to the battery
 
 
-        FrontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        FrontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        BackLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
+       FrontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+       FrontRightDrive.setDirection(DcMotor.Direction.FORWARD);
+       BackLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+       BackRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         ArmMotor.setDirection(DcMotor.Direction.REVERSE);
         ClawReachServo.setPosition(ClawReachPosition);
@@ -156,9 +156,9 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             double strafe = 0;
 
 
-            drive =   (-gamepad1.left_stick_y);
-            turn  =  (gamepad1.left_stick_x);
-            strafe =  (gamepad1.right_stick_x);
+            drive = 0.75 *  (-gamepad1.left_stick_y);
+            turn  = 0.6 * (gamepad1.left_stick_x);
+            strafe = 0.6 * (gamepad1.right_stick_x);
 
 
             // Choose to drive using either Tank Mode, or POV Mode
@@ -183,14 +183,14 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             BackRightDrive.setPower(BackRightPower);
 
 
-            if (gamepad1.dpad_up) {
+            if (gamepad2.dpad_up) {
                 InLineEncoderDriveArm(ArmMotor, 0.1, -2, 5);
             }
-            if (gamepad1.dpad_down) {
+            if (gamepad2.dpad_down) {
                 InLineEncoderDriveArm(ArmMotor, 0.1, 2, 5);
             }
 
-            // position = servoPower;
+            //Claw is closed position
             if (gamepad1.a) {
                 position = 0.65;
                 ClawServo.setPosition(position);
@@ -200,7 +200,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 telemetry.addData(">", "Press Stop to end test.");
                 telemetry.update();
             }
-
+            //Claw is open position
             if (gamepad1.b) {
                 position = 0.40;
                 ClawServo.setPosition(position);
@@ -211,7 +211,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 telemetry.update();
             }
 
-
+            //
             if (gamepad2.x) {
                 ClawReachPosition = 0.80;
                 ClawReachServo.setPosition(ClawReachPosition);
@@ -221,7 +221,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 ClawReachServo.setPosition(ClawReachPosition);
             }
 
-            if (gamepad2.dpad_up) {
+            if (gamepad2.left_bumper) {
                 // Keep stepping up until we hit the max value.
                 // Keep stepping up until we hit the max value.
                 ClawReachPosition += INCREMENT;
@@ -230,7 +230,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 }
                 ClawReachServo.setPosition(ClawReachPosition);
             }
-            else if (gamepad2.dpad_down) {
+            else if (gamepad2.right_bumper) {
                 ClawReachPosition -= INCREMENT;
                 if (ClawReachPosition <= CLAW_MIN_POS) {
                     ClawReachPosition = CLAW_MIN_POS;

@@ -56,19 +56,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwarePushbot_TC
 {
     /* Public OpMode members. */
-    public DcMotorEx  frontLeft   = null;
-    public DcMotorEx  frontRight  = null;
-    public DcMotorEx  backLeft  = null;
-    public DcMotorEx  backRight  = null;
-    //public DcMotorEx  leftShooter = null;
-    //public DcMotorEx  rightShooter = null;
-    //public DcMotorEx  conveyor = null;
-    //public DcMotorEx  intake = null;
-    public Servo  CarouselDrive = null;
-    public DcMotorEx ArmMotor = null;
-    //public Servo gripServo = null;
-    // public Servo guideServo=null;
-    //public Servo   gateServo;
+    public DcMotor  frontLeft   = null;
+    public DcMotor  frontRight  = null;
+    public DcMotor  backLeft  = null;
+    public DcMotor  backRight  = null;
+
+
+    public DcMotor ArmMotor = null;
+    public CRServo CarouselServo=null;
+    public Servo ClawReachServo=null;
+    public Servo   ClawServo=null;
 
 
 
@@ -92,47 +89,24 @@ public class HardwarePushbot_TC
         frontRight = hwMap.get(DcMotorEx.class, "FrontRight");
         backLeft =  hwMap.get(DcMotorEx.class, "BackLeft");
         backRight = hwMap.get(DcMotorEx.class, "BackRight");
-    //    CarouselDrive = hwMap.get(Servo.class, "CarouselDrive");
-       // ArmMotor = hwMap.get(DcMotorEx.class, "ArmMotor");
-        /* Define and Initialize Motors
-        leftShooter  = hwMap.get(DcMotorEx.class, "LeftShooter");
-        rightShooter = hwMap.get(DcMotorEx.class, "RightShooter");
-        conveyor =  hwMap.get(DcMotorEx.class, "Conveyor");
-        intake = hwMap.get(DcMotorEx.class, "InTake");
+        ArmMotor = hwMap.get(DcMotorEx.class, "ArmMotor");
+        ClawServo = hwMap.get(Servo.class, "Claw");
+        ClawReachServo = hwMap.get(Servo.class, "ClawReach");
+        CarouselServo = hwMap.get(CRServo.class, "Carousel");
 
 
 
-
-
-        armServo = hwMap.get(Servo.class,"arm");
-        gripServo = hwMap.get(Servo.class,"grip");
-        guideServo = hwMap.get(Servo.class,"guide");
-        gateServo = hwMap.get(Servo.class, "gate");
-*/
         frontLeft.setDirection(DcMotorEx.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         frontRight.setDirection(DcMotorEx.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         backLeft.setDirection(DcMotorEx.Direction.REVERSE);
-        backRight.setDirection(DcMotorEx.Direction.REVERSE);
+        backRight.setDirection(DcMotorEx.Direction.FORWARD);
 
-
-
-/*
-        leftShooter.setDirection(DcMotorEx.Direction.FORWARD);
-        rightShooter.setDirection(DcMotorEx.Direction.FORWARD);
-        intake.setDirection(DcMotorEx.Direction.FORWARD);
-        conveyor.setDirection(DcMotorEx.Direction.REVERSE);
-*/
 
 
         frontLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-
-        //    leftShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        //  rightShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        // intake.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        // conveyor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
 
 
@@ -141,10 +115,7 @@ public class HardwarePushbot_TC
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
-        // leftShooter.setPower(0);
-        // rightShooter.setPower(0);
-        // intake.setPower(0);
-        // conveyor.setPower(0);
+
 
 
 
@@ -157,12 +128,6 @@ public class HardwarePushbot_TC
         backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
 
-        /*
-        leftShooter.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        rightShooter.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        intake.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        conveyor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-*/
 
 
     }

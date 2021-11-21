@@ -80,11 +80,14 @@ public class AutoTest extends LinearOpMode {
 
     static final double     COUNTS_PER_MOTOR_REV    = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1 ;   // 1  // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 5.25 ;     // For figuring circumference
+    static final double     WHEEL_DIAMETER_INCHES   = 4 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.9;
     static final double     TURN_SPEED              = 0.3;
+    double position = 0.7;
+    double CarouselPosition =0;
+    double ClawReachPosition = 0.3;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -93,23 +96,16 @@ public class AutoTest extends LinearOpMode {
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-        double armPosition=0.09;
-        double gripPosition=0.95;
-        double guidePosition= 0.2;
-
         robot.init(hardwareMap);
-
-        //  robot.gripServo.setPosition(gripPosition);
-        //    robot.armServo.setPosition(armPosition);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       /* robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);*/
 
         robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -129,96 +125,77 @@ public class AutoTest extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // FORWARD DRIVE SAMPLE. reverse drive will be all negative values
+        robot.ArmMotor.setDirection(DcMotor.Direction.REVERSE);
+        robot.ClawReachServo.setPosition(ClawReachPosition);
+        robot.ClawServo.setPosition(position);
 
-        //Drive forward to the target BOX
-/*
-        class Carousel implements Runnable{
-            ElapsedTime runElapsedTime = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
-            public void run(){
-                runElapsedTime.reset();
-                runElapsedTime.startTime();
-                if(runElapsedTime.time() == 0.1){
-                    robot.CarouselDrive.setPower(0);
-                }
+        //straffe towards the inside of the field before moving to the carousel
+        encoderDriveInLine(0.2,-5,5,5,-5,2);
 
-            }
+        //Drive backword to the carousel
+        encoderDriveInLine(0.5,-20,-20,-20,-20,2);
+
+
+        ElapsedTime carouselTimer = new ElapsedTime();
+        carouselTimer.reset();
+        carouselTimer.startTime();
+
+        while(runtime.seconds() <= 5) {
+            CarouselPosition=-1;
+            robot.CarouselServo.setPower(CarouselPosition);
         }
-        Thread thread1 = new Thread(new Carousel());
-        ElapsedTime runElapsedTime = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
-        robot.CarouselDrive.setPower(0.2);
-        encoderDrive(0.2, -18,-18,-18,-18,2);
+
+        sleep(500);
+
+        //straffe towards the middle of the field to position to move towards alliance hub
+        encoderDriveInLine(0.5,-40,40,40,-40,5);
+        sleep(500);
+
+        //move towards the alliance hub
+        encoderDriveInLine(0.5,24,24,24,24,5);
+        sleep(500);
+        //open out the claw to open position
+
+        ClawReachPosition = 0.80;
+        robot.ClawReachServo.setPosition(ClawReachPosition);
+        sleep(500);
+        //position arm for delivery
+        encoderDriveArmInLine(robot.ArmMotor, 0.1, -2, 5);
+        sleep(500);
+        //open the claw up so that the frieght drops on the alliance hub
+        position = 0.40;
+        robot.ClawServo.setPosition(position);
+
         sleep(1000);
-        thread1.start();
-        sleep(5000);
-        encoderDrive(0.7, 111,111,111,111,7);
-        encoderDrive(0.2, -1, -1,-1,-1,2);
-        encoderDrive(0.2, 0, 4,4,0,2);
-        robot.ArmMotor.setTargetPosition(50);
-        //
-        */
+        //close the claw and pull back the claw reach servo
 
-        encoderDrive(0.4,50,50,50,50,4);
+        //move back towards the storage unit
+        encoderDriveInLine(0.5,-25,-25,-25,-25,5);
+        sleep(500);
 
 
+        position = 0.65;
+        robot.ClawServo.setPosition(position);
+        sleep(500);
+        ClawReachPosition = 0.30;
+        robot.ClawReachServo.setPosition(ClawReachPosition);
 
+        //drive towards the alliance hub
+        encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5);
 
+        //move towards the storage unit
+        encoderDriveInLine(0.5,-25,-25,-25,-25,5);
 
-        // S1: Forward 50 Inches with 5 Sec timeout
-        //following is an example of left turn
-        // encoderDrive(TURN_SPEED,-10,10,-10,10,4);
-        //following is an example of right turn
-        //turn right since this is blue corner to drop the wobble from the back of the robot
-        //encoderDrive(TURN_SPEED,-12,12,-12,12,4);
-
-        // S2: Turn Right 12 Inches with 4 Sec timeout
-        //after turning drive backwords so that the wobble can be dropped in the target
-//        encoderDrive(DRIVE_SPEED,-20,-20,-20,-20,4);  // S2: Turn Right 12 Inches with 4 Sec timeout
-/*
-        //get the arm and gripper to drop the wobble
-        armPosition = 0.2;
-        gripPosition = 0.55;
-        robot.armServo.setPosition(armPosition);
-        sleep(2500);
-        robot.gripServo.setPosition(gripPosition);
-        sleep(2000);
-*/
-        //move forward to clear away from wobble
-        //encoderDrive(DRIVE_SPEED, 12,12,12,12, 2);
-/*
-        //reset the arm and gripper to starting position
-        armPosition = 0.09;
-        gripPosition = 0.95;
-        robot.armServo.setPosition(armPosition);
-        robot.gripServo.setPosition(gripPosition);
-*/
-        //turn left towards the shooting target zone
-        //  encoderDrive(TURN_SPEED, -11.5,11.5,-11.5,11.5, 5);
-        //back towards out of the launch line
-
-        //encoderDrive(DRIVE_SPEED, -10,-10,-10,-10, 5);
-
-        //encoderDrive(TURN_SPEED,-2,2,-2,2,4);
-/*
-        int i = 0;
-            robot.guideServo.setPosition(guidePosition);
-            robot.conveyor.setPower(1);
-            robot.leftShooter.setPower(1);
-            robot.rightShooter.setPower(1);
-            robot.intake.setPower(1);
-            sleep(6000);
-
-        robot.conveyor.setPower(0);
-        robot.leftShooter.setPower(0);
-        robot.rightShooter.setPower(0);
-        robot.intake.setPower(0);
-        //drive to position on the launch line
-  */
-        //    encoderDrive(DRIVE_SPEED, 10,10,10,10, 5);
+        //strafe right towards the inside of the storage unit
+        encoderDriveInLine(0.2,5,-5,-5,5,2);
 
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
+
+
+
 
     /*
      *  Method to perform a relative move, based on encoder counts.
@@ -228,7 +205,7 @@ public class AutoTest extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderDrive(double speed,
+    public void encoderDriveInLine(double speed,
                              double frontleftInches, double frontrightInches,
                              double backleftInches, double backrightInches,
                              double timeoutS) {
@@ -294,7 +271,43 @@ public class AutoTest extends LinearOpMode {
             robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            //  sleep(250);   // optional pause after each move
+              sleep(250);   // optional pause after each move
+        }
+    }
+
+
+    public void encoderDriveArmInLine(DcMotor ArmMotor, double speed, double armmovement, double timeoutS) {
+        int newArmTarget;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newArmTarget = ArmMotor.getCurrentPosition() + (int) (armmovement * COUNTS_PER_INCH);
+            ArmMotor.setPower(Math.abs(speed));
+            ArmMotor.setTargetPosition(newArmTarget);
+
+            // Turn On RUN_TO_POSITION
+            ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) && ArmMotor.isBusy()) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d ", newArmTarget);
+                telemetry.addData("Path2", "Running at %7d ", ArmMotor.getCurrentPosition());
+
+                telemetry.update();
+            }
+
+            sleep(250);   // optional pause after each move
+
         }
     }
 }
