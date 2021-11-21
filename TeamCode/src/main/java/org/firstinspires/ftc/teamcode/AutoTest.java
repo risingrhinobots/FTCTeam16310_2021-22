@@ -36,8 +36,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.DuckPosDetermination;
 
+import org.firstinspires.ftc.teamcode.DuckPosDetermination.DuckPosDeterminationPipeline;
 import org.firstinspires.ftc.teamcode.HardwarePushbot_TC;
+import org.openftc.easyopencv.OpenCvWebcam;
+import org.openftc.easyopencv.OpenCvPipeline;
+
 
 //import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 //import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -72,12 +77,11 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot_TC;
 
 @Autonomous(name="Pushbot: AutoTest1", group="FreightFrenzy")
 //@Disabled
-public class AutoTest extends LinearOpMode {
+public class AutoTest<pipeline> extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot_TC robot   = new HardwarePushbot_TC();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
-
     static final double     COUNTS_PER_MOTOR_REV    = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1 ;   // 1  // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4 ;     // For figuring circumference
@@ -88,7 +92,12 @@ public class AutoTest extends LinearOpMode {
     double position = 0.7;
     double CarouselPosition =0;
     double ClawReachPosition = 0.3;
+/*    OpenCvWebcam webcam;
+    DuckPosDeterminationPipeline pipeline;
 
+    pipeline = new DuckPosDeterminationPipeline();
+    webcam.setPipeline(pipeline);
+*/
     @Override
     public void runOpMode() throws InterruptedException {
 
