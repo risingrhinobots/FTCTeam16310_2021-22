@@ -178,7 +178,8 @@ public class AutoTest<pipeline> extends LinearOpMode {
         encoderDriveInLine(0.5,24,24,24,24,5);
         sleep(500);
         //open out the claw to open position
-
+        telemetry.addData("Duck Position", "Duck Pos: %7d", pipeline.getAnalysis());
+        telemetry.update();
         ClawReachPosition = 0.80;
         robot.ClawReachServo.setPosition(ClawReachPosition);
         sleep(500);
