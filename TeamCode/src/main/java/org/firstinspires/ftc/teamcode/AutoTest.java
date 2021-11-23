@@ -96,6 +96,7 @@ public class AutoTest<pipeline> extends LinearOpMode {
     double ClawReachPosition = 0.3;
     OpenCvWebcam webcam;
     DuckPosDeterminationPipeline pipeline;
+    //TODO Remove sleeps and make it more optimized by using the class instead of the in line method
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -152,10 +153,10 @@ public class AutoTest<pipeline> extends LinearOpMode {
         robot.ClawReachServo.setPosition(ClawReachPosition);
         robot.ClawServo.setPosition(position);
 
-        //straffe towards the inside of the field before moving to the carousel
+        //strafe towards the inside of the field before moving to the carousel
         encoderDriveInLine(0.2,-5,5,5,-5,2);
 
-        //Drive backword to the carousel
+        //Drive backward to the carousel
         encoderDriveInLine(0.5,-20,-20,-20,-20,2);
 
 
@@ -170,7 +171,7 @@ public class AutoTest<pipeline> extends LinearOpMode {
 
         sleep(500);
 
-        //straffe towards the middle of the field to position to move towards alliance hub
+        //strafe towards the middle of the field to position to move towards alliance hub
         encoderDriveInLine(0.5,-40,40,40,-40,5);
         sleep(500);
 
@@ -185,13 +186,13 @@ public class AutoTest<pipeline> extends LinearOpMode {
         sleep(500);
         //position arm for delivery based on duck position
         if(pipeline.getAnalysis() == DuckPosDeterminationPipeline.DuckPosition.LEFT){
-        encoderDriveArmInLine(robot.ArmMotor, 0.1, -2, 5);
+        encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5);
         }
         if(pipeline.getAnalysis() == DuckPosDeterminationPipeline.DuckPosition.CENTER){
-            encoderDriveArmInLine(robot.ArmMotor, 0.1, -4, 7);
+            encoderDriveArmInLine(robot.ArmMotor, 0.1, 4, 7);
         }
         if(pipeline.getAnalysis() == DuckPosDeterminationPipeline.DuckPosition.RIGHT){
-            encoderDriveArmInLine(robot.ArmMotor, 0.1, -6, 9);
+            encoderDriveArmInLine(robot.ArmMotor, 0.1, 6, 9);
         }
         sleep(500);
         //open the claw up so that the frieght drops on the alliance hub
@@ -213,7 +214,7 @@ public class AutoTest<pipeline> extends LinearOpMode {
         robot.ClawReachServo.setPosition(ClawReachPosition);
 
         //drive towards the alliance hub
-        encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5);
+        encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5); //TODO is the neutral position for the arm 0 or 2
 
         //move towards the storage unit
         encoderDriveInLine(0.5,-25,-25,-25,-25,5);
