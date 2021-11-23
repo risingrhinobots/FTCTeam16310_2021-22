@@ -96,6 +96,8 @@ public class AutoTest<pipeline> extends LinearOpMode {
     double ClawReachPosition = 0.3;
     OpenCvWebcam webcam;
     DuckPosDeterminationPipeline pipeline;
+    EncoderDrive encoderDrive;
+    EncoderDriveArm encoderDriveArm;
     //TODO Remove sleeps and make it more optimized by using the class instead of the in line method
     @Override
     public void runOpMode() throws InterruptedException {
@@ -154,10 +156,12 @@ public class AutoTest<pipeline> extends LinearOpMode {
         robot.ClawServo.setPosition(position);
 
         //strafe towards the inside of the field before moving to the carousel
-        encoderDriveInLine(0.2,-5,5,5,-5,2);
+       //unoptimized encoderDriveInLine(0.2,-5,5,5,-5,2);
+        encoderDrive.encoderDrive(0.2,-5,5,5,-5,2);
 
         //Drive backward to the carousel
-        encoderDriveInLine(0.5,-20,-20,-20,-20,2);
+        //unoptimized encoderDriveInLine(0.5,-20,-20,-20,-20,2);
+        encoderDrive.encoderDrive(0.5,-20,-20,-20,-20,2);
 
 
         ElapsedTime carouselTimer = new ElapsedTime();
@@ -172,11 +176,13 @@ public class AutoTest<pipeline> extends LinearOpMode {
         sleep(500);
 
         //strafe towards the middle of the field to position to move towards alliance hub
-        encoderDriveInLine(0.5,-40,40,40,-40,5);
+        //unoptimized encoderDriveInLine(0.5,-40,40,40,-40,5);
+        encoderDrive.encoderDrive(0.5,-40,40,40,-40,5);
         sleep(500);
 
         //move towards the alliance hub
-        encoderDriveInLine(0.5,24,24,24,24,5);
+        //unoptimized encoderDriveInLine(0.5,24,24,24,24,5);
+        encoderDrive.encoderDrive(0.5,24,24,24,24,5);
         sleep(500);
         //open out the claw to open position
         telemetry.addData("Duck Position", "Duck Pos: %7d", pipeline.getAnalysis());
@@ -186,13 +192,16 @@ public class AutoTest<pipeline> extends LinearOpMode {
         sleep(500);
         //position arm for delivery based on duck position
         if(pipeline.getAnalysis() == DuckPosDeterminationPipeline.DuckPosition.LEFT){
-        encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5);
+            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5);
+        encoderDriveArm.encoderDriveArm(0.1, 2, 5);
         }
         if(pipeline.getAnalysis() == DuckPosDeterminationPipeline.DuckPosition.CENTER){
-            encoderDriveArmInLine(robot.ArmMotor, 0.1, 4, 7);
+            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 4, 7);
+            encoderDriveArm.encoderDriveArm(0.1, 4, 7);
         }
         if(pipeline.getAnalysis() == DuckPosDeterminationPipeline.DuckPosition.RIGHT){
-            encoderDriveArmInLine(robot.ArmMotor, 0.1, 6, 9);
+            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 6, 9);
+            encoderDriveArm.encoderDriveArm(0.1, 6, 9);
         }
         sleep(500);
         //open the claw up so that the frieght drops on the alliance hub
@@ -203,7 +212,8 @@ public class AutoTest<pipeline> extends LinearOpMode {
         //close the claw and pull back the claw reach servo
 
         //move back towards the storage unit
-        encoderDriveInLine(0.5,-25,-25,-25,-25,5);
+        //unoptimized encoderDriveInLine(0.5,-25,-25,-25,-25,5);
+        encoderDrive.encoderDrive(0.5,-25,-25,-25,-25,5);
         sleep(500);
 
 
@@ -214,13 +224,15 @@ public class AutoTest<pipeline> extends LinearOpMode {
         robot.ClawReachServo.setPosition(ClawReachPosition);
 
         //drive towards the alliance hub
-        encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5); //TODO is the neutral position for the arm 0 or 2
-
+        //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5); //TODO is the neutral position for the arm 0 or 2
+        encoderDriveArm.encoderDriveArm(0.1, 2, 5);
         //move towards the storage unit
-        encoderDriveInLine(0.5,-25,-25,-25,-25,5);
+        //unoptimized encoderDriveInLine(0.5,-25,-25,-25,-25,5);
+        encoderDrive.encoderDrive(0.5,-25,-25,-25,-25,5);
 
         //strafe right towards the inside of the storage unit
-        encoderDriveInLine(0.2,5,-5,-5,5,2);
+        //unoptimized encoderDriveInLine(0.2,5,-5,-5,5,2);
+        encoderDrive.encoderDrive(0.2,5,-5,-5,5,2);
 
 
         telemetry.addData("Path", "Complete");
