@@ -154,7 +154,7 @@ public class AutoTest<pipeline> extends LinearOpMode {
         robot.ArmMotor.setDirection(DcMotor.Direction.REVERSE);
         robot.ClawReachServo.setPosition(ClawReachPosition);
         robot.ClawServo.setPosition(position);
-
+        DuckPosDeterminationPipeline.DuckPosition duckPos = pipeline.getAnalysis();
         //strafe towards the inside of the field before moving to the carousel
        //unoptimized encoderDriveInLine(0.2,-5,5,5,-5,2);
         encoderDrive.encoderDrive(0.2,-5,5,5,-5,2);
@@ -191,15 +191,15 @@ public class AutoTest<pipeline> extends LinearOpMode {
         robot.ClawReachServo.setPosition(ClawReachPosition);
         sleep(500);
         //position arm for delivery based on duck position
-        if(pipeline.getAnalysis() == DuckPosDeterminationPipeline.DuckPosition.LEFT){
+        if(duckPos == DuckPosDeterminationPipeline.DuckPosition.LEFT){
             //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5);
         encoderDriveArm.encoderDriveArm(0.1, 2, 5);
         }
-        if(pipeline.getAnalysis() == DuckPosDeterminationPipeline.DuckPosition.CENTER){
+        if(duckPos == DuckPosDeterminationPipeline.DuckPosition.CENTER){
             //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 4, 7);
             encoderDriveArm.encoderDriveArm(0.1, 4, 7);
         }
-        if(pipeline.getAnalysis() == DuckPosDeterminationPipeline.DuckPosition.RIGHT){
+        if(duckPos == DuckPosDeterminationPipeline.DuckPosition.RIGHT){
             //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 6, 9);
             encoderDriveArm.encoderDriveArm(0.1, 6, 9);
         }
