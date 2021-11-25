@@ -189,12 +189,20 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             if (gamepad2.dpad_down) {
                 InLineEncoderDriveArm(ArmMotor, 0.1, 2, 5);
             }
+            if (gamepad1.dpad_up) {
+                ClawReachPosition = 0.3;
+                ClawReachServo.setPosition(ClawReachPosition);
+            }
+            if (gamepad1.dpad_down) {
+                ClawReachPosition = 0.8;
+                ClawReachServo.setPosition(ClawReachPosition);
+            }
+
 
             //Claw is closed position
             if (gamepad1.a) {
                 position = 0.65;
                 ClawServo.setPosition(position);
-
                 // Display the current value
                 telemetry.addData("Servo Position", "%5.2f", position);
                 telemetry.addData(">", "Press Stop to end test.");
@@ -204,14 +212,13 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             if (gamepad1.b) {
                 position = 0.40;
                 ClawServo.setPosition(position);
-
                 // Display the current value
                 telemetry.addData("Servo Position", "%5.2f", position);
                 telemetry.addData(">", "Press Stop to end test.");
                 telemetry.update();
             }
 
-            //
+            //claw is to the open position ready to pick the frieght
             if (gamepad2.x) {
                 ClawReachPosition = 0.80;
                 ClawReachServo.setPosition(ClawReachPosition);
@@ -237,7 +244,12 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 }
                 ClawReachServo.setPosition(ClawReachPosition);
             }
-
+            if (gamepad1.left_bumper) {
+                encoderDriveInLine(0.8,35,35,35,35,2);
+            }
+            else if (gamepad1.right_bumper) {
+                encoderDriveInLine(0.8,-35,-35,-35,-35,2);
+            }
 
 
             // Display the current value
@@ -299,6 +311,84 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
 
             sleep(250);   // optional pause after each move
 
+        }
+    }
+
+    /*
+     *  Method to perform a relative move, based on encoder counts.
+     *  Encoders are not reset as the move is based on the current position.
+     *  Move will stop if any of three conditions occur:
+     *  1) Move gets to the desired position
+     *  2) Move runs out of time
+     *  3) Driver stops the opmode running.
+     */
+    public void encoderDriveInLine(double speed,
+                                   double frontleftInches, double frontrightInches,
+                                   double backleftInches, double backrightInches,
+                                   double timeoutS) {
+        int newfrontLeftTarget;
+        int newfrontRightTarget;
+        int newbackLeftTarget;
+        int newbackRightTarget;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newfrontLeftTarget = FrontLeftDrive.getCurrentPosition() + (int)(frontleftInches * COUNTS_PER_INCH);
+            newfrontRightTarget = FrontRightDrive.getCurrentPosition() + (int)(frontrightInches * COUNTS_PER_INCH);
+            newbackLeftTarget = BackLeftDrive.getCurrentPosition() + (int)(backleftInches * COUNTS_PER_INCH);
+            newbackRightTarget = BackRightDrive.getCurrentPosition() + (int)(backrightInches * COUNTS_PER_INCH);
+
+            FrontLeftDrive.setTargetPosition(newfrontLeftTarget);
+            FrontRightDrive.setTargetPosition(newfrontRightTarget);
+            BackLeftDrive.setTargetPosition(newbackLeftTarget);
+            BackRightDrive.setTargetPosition(newbackRightTarget);
+
+            // Turn On RUN_TO_POSITION
+            FrontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            FrontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            BackLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            BackRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            FrontLeftDrive.setPower(Math.abs(speed));
+            FrontRightDrive.setPower(Math.abs(speed));
+            BackLeftDrive.setPower(Math.abs(speed));
+            BackRightDrive.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (FrontLeftDrive.isBusy() && FrontRightDrive.isBusy() &&
+                            BackLeftDrive.isBusy() && BackRightDrive.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1",  "Running to %7d :%7d", newfrontLeftTarget,  newfrontRightTarget);
+                telemetry.addData("Path2",  "Running at %7d :%7d",
+                        FrontLeftDrive.getCurrentPosition(),
+                        FrontRightDrive.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            FrontLeftDrive.setPower(0);
+            FrontRightDrive.setPower(0);
+            BackLeftDrive.setPower(0);
+            BackRightDrive.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            FrontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            FrontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            BackLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            BackRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            sleep(250);   // optional pause after each move
         }
     }
 }
