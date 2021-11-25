@@ -162,8 +162,6 @@ public class AutoTest<pipeline> extends LinearOpMode {
         //Drive backward to the carousel
         //unoptimized encoderDriveInLine(0.5,-20,-20,-20,-20,2);
         encoderDrive.encoderDrive(0.5,-20,-20,-20,-20,2);
-
-
         ElapsedTime carouselTimer = new ElapsedTime();
         carouselTimer.reset();
         carouselTimer.startTime();
@@ -191,18 +189,7 @@ public class AutoTest<pipeline> extends LinearOpMode {
         robot.ClawReachServo.setPosition(ClawReachPosition);
         sleep(500);
         //position arm for delivery based on duck position
-        if(duckPos == DuckPosDeterminationPipeline.DuckPosition.LEFT){
-            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5);
-        encoderDriveArm.encoderDriveArm(0.1, 2, 5);
-        }
-        if(duckPos == DuckPosDeterminationPipeline.DuckPosition.CENTER){
-            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 4, 7);
-            encoderDriveArm.encoderDriveArm(0.1, 4, 7);
-        }
-        if(duckPos == DuckPosDeterminationPipeline.DuckPosition.RIGHT){
-            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 6, 9);
-            encoderDriveArm.encoderDriveArm(0.1, 6, 9);
-        }
+        armPosBasedOnDuckPos(duckPos);
         sleep(500);
         //open the claw up so that the frieght drops on the alliance hub
         position = 0.40;
@@ -240,8 +227,26 @@ public class AutoTest<pipeline> extends LinearOpMode {
     }
 
 
-
-
+    public void armPosBasedOnDuckPos(DuckPosDeterminationPipeline.DuckPosition duckPos){
+        if(duckPos == DuckPosDeterminationPipeline.DuckPosition.LEFT){
+            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5);
+            encoderDriveArm.encoderDriveArm(0.1, 2, 5);
+            telemetry.addData("Arm Pos", "Left");
+            telemetry.update();
+        }
+        else if(duckPos == DuckPosDeterminationPipeline.DuckPosition.CENTER){
+            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 4, 7);
+            encoderDriveArm.encoderDriveArm(0.1, 4, 7);
+            telemetry.addData("Arm Pos", "Center");
+            telemetry.update();
+        }
+        else if(duckPos == DuckPosDeterminationPipeline.DuckPosition.RIGHT){
+            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 6, 9);
+            encoderDriveArm.encoderDriveArm(0.1, 6, 9);
+            telemetry.addData("Arm Pos", "Right");
+            telemetry.update();
+        }
+    }
     /*
      *  Method to perform a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
