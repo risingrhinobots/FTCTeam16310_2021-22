@@ -161,14 +161,27 @@ public class AutoTest<pipeline> extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // FORWARD DRIVE SAMPLE. reverse drive will be all negative values
-        robot.ArmMotor.setDirection(DcMotor.Direction.REVERSE);
-        encoderDriveArmInLine(robot.ArmMotor, .1, -4, 7);
-        encoderDriveArmInLine(robot.ArmMotor, .1, 4, 7);
         //encoderDriveArm.encoderDriveArm( .1, -4, 7);
-        sleep(30000);
         robot.ClawReachServo.setPosition(ClawReachPosition);
         robot.ClawServo.setPosition(position);
         DuckPosDeterminationPipeline.DuckPosition duckPos = pipeline.getAnalysis();
+        while (opModeIsActive()) {
+            /*
+             * Send some stats to the telemetry
+             */
+            telemetry.addData("Frame Count", webcam.getFrameCount());
+            telemetry.addData("FPS", String.format("%.2f", webcam.getFps()));
+            telemetry.addData("Total frame time ms", webcam.getTotalFrameTimeMs());
+            telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
+            telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
+            telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
+
+            telemetry.addData("Analysis", pipeline.getAnalysis());
+            telemetry.update();
+
+
+        }
+
         //armPosBasedOnDuckPos(duckPos);
         sleep(30000);
         //strafe towards the inside of the field before moving to the carousel
