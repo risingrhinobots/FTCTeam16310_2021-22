@@ -100,6 +100,7 @@ public class HardwarePushbot_TC
         frontRight.setDirection(DcMotorEx.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         backLeft.setDirection(DcMotorEx.Direction.REVERSE);
         backRight.setDirection(DcMotorEx.Direction.FORWARD);
+        ArmMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
 
 
@@ -107,7 +108,7 @@ public class HardwarePushbot_TC
         frontRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-
+        ArmMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
 
         // Set all motors to zero power
@@ -126,7 +127,7 @@ public class HardwarePushbot_TC
         frontRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-
+        ArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
 

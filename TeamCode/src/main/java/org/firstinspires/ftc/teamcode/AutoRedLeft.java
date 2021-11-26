@@ -99,11 +99,11 @@ public class AutoRedLeft extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.9;
     static final double     TURN_SPEED              = 0.3;
-    double position = 0.65;
+    double position = 0.85;
     double ArmMovement;
     double ArmMovementTimeout;
     double CarouselPosition =0;
-    double ClawReachPosition = 0.3;
+    double ClawReachPosition = 0.05;
     OpenCvWebcam webcam;
     InLineDuckPosDeterminationPipeline pipeline;
     @Override
@@ -157,7 +157,7 @@ public class AutoRedLeft extends LinearOpMode {
         telemetry.update();
 
         robot.ClawReachServo.setPosition(ClawReachPosition);
-        robot.ClawServo.setPosition(0.65);
+        robot.ClawServo.setPosition(0.85);
 
 
         // Wait for the game to start (driver presses PLAY)
@@ -247,12 +247,12 @@ public class AutoRedLeft extends LinearOpMode {
         }
 
         //open out the claw to open position
-        ClawReachPosition = 0.90;
-        robot.ClawReachServo.setPosition(ClawReachPosition);
+      //  ClawReachPosition = 0.90;
+       // robot.ClawReachServo.setPosition(ClawReachPosition);
         sleep(1500);
 
         //open the claw up so that the frieght drops on the alliance hub
-        position = 0.40;
+        position = 0.70;
         robot.ClawServo.setPosition(position);
 
         sleep(500);
@@ -262,10 +262,10 @@ public class AutoRedLeft extends LinearOpMode {
         encoderDriveInLine(0.5,-30,-30,-30,-30,5);
 
 
-        position = 0.65;
+        position = 0.85;
         robot.ClawServo.setPosition(position);
         sleep(500);
-        ClawReachPosition = 0.30;
+        ClawReachPosition = 0.05;
         robot.ClawReachServo.setPosition(ClawReachPosition);
 
 

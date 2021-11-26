@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -44,6 +45,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
+import org.firstinspires.ftc.teamcode.EncoderDriveArm;
 
 
 //import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -107,6 +109,8 @@ public class AutoTest<pipeline> extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+       // encoderDrive = new EncoderDrive();
+        encoderDriveArm = new EncoderDriveArm(robot.ArmMotor);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         pipeline = new DuckPosDeterminationPipeline();
@@ -137,7 +141,7 @@ public class AutoTest<pipeline> extends LinearOpMode {
         robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        robot.ArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -145,25 +149,35 @@ public class AutoTest<pipeline> extends LinearOpMode {
                 robot.frontRight.getCurrentPosition());
         telemetry.update();
 
+
+
+      //  encoderDriveArm.encoderDriveArm(robot.ArmMotor, .6, 4, 5);
         // Wait for the game to start (driver presses PLAY)
+        telemetry.addData("Status: ",  "After call to arm");
+        telemetry.update();
+
         waitForStart();
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // FORWARD DRIVE SAMPLE. reverse drive will be all negative values
         robot.ArmMotor.setDirection(DcMotor.Direction.REVERSE);
+        encoderDriveArmInLine(robot.ArmMotor, .1, -4, 7);
+        encoderDriveArmInLine(robot.ArmMotor, .1, 4, 7);
+        //encoderDriveArm.encoderDriveArm( .1, -4, 7);
+        sleep(30000);
         robot.ClawReachServo.setPosition(ClawReachPosition);
         robot.ClawServo.setPosition(position);
         DuckPosDeterminationPipeline.DuckPosition duckPos = pipeline.getAnalysis();
+        //armPosBasedOnDuckPos(duckPos);
+        sleep(30000);
         //strafe towards the inside of the field before moving to the carousel
-       //unoptimized encoderDriveInLine(0.2,-5,5,5,-5,2);
+        //unoptimized encoderDriveInLine(0.2,-5,5,5,-5,2);
         encoderDrive.encoderDrive(0.2,-5,5,5,-5,2);
 
         //Drive backward to the carousel
         //unoptimized encoderDriveInLine(0.5,-20,-20,-20,-20,2);
         encoderDrive.encoderDrive(0.5,-20,-20,-20,-20,2);
-
-
         ElapsedTime carouselTimer = new ElapsedTime();
         carouselTimer.reset();
         carouselTimer.startTime();
@@ -191,18 +205,7 @@ public class AutoTest<pipeline> extends LinearOpMode {
         robot.ClawReachServo.setPosition(ClawReachPosition);
         sleep(500);
         //position arm for delivery based on duck position
-        if(duckPos == DuckPosDeterminationPipeline.DuckPosition.LEFT){
-            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5);
-        encoderDriveArm.encoderDriveArm(0.1, 2, 5);
-        }
-        if(duckPos == DuckPosDeterminationPipeline.DuckPosition.CENTER){
-            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 4, 7);
-            encoderDriveArm.encoderDriveArm(0.1, 4, 7);
-        }
-        if(duckPos == DuckPosDeterminationPipeline.DuckPosition.RIGHT){
-            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 6, 9);
-            encoderDriveArm.encoderDriveArm(0.1, 6, 9);
-        }
+        armPosBasedOnDuckPos(duckPos);
         sleep(500);
         //open the claw up so that the frieght drops on the alliance hub
         position = 0.40;
@@ -240,8 +243,32 @@ public class AutoTest<pipeline> extends LinearOpMode {
     }
 
 
-
-
+    public void armPosBasedOnDuckPos(DuckPosDeterminationPipeline.DuckPosition duckPos){
+        if(duckPos == DuckPosDeterminationPipeline.DuckPosition.LEFT){
+            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5);
+            encoderDriveArm.encoderDriveArm( .1, 2, 7);
+            sleep(2000);
+            telemetry.addData("Arm Pos", "Left");
+            telemetry.update();
+            encoderDriveArm.encoderDriveArm(0.1, -2, 7);
+        }
+        else if(duckPos == DuckPosDeterminationPipeline.DuckPosition.CENTER){
+            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 4, 7);
+            encoderDriveArm.encoderDriveArm(0.1, 6, 7);
+            sleep(2000);
+            telemetry.addData("Arm Pos", "Center");
+            telemetry.update();
+            encoderDriveArm.encoderDriveArm(0.1, -6, 7);
+        }
+        else if(duckPos == DuckPosDeterminationPipeline.DuckPosition.RIGHT){
+            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 6, 9);
+            encoderDriveArm.encoderDriveArm(0.1, 8.5, 9);
+            telemetry.addData("Arm Pos", "Right");
+            telemetry.update();
+            sleep(2000);
+            encoderDriveArm.encoderDriveArm(0.1, -8.5, 9);
+        }
+    }
     /*
      *  Method to perform a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
@@ -251,9 +278,9 @@ public class AutoTest<pipeline> extends LinearOpMode {
      *  3) Driver stops the opmode running.
      */
     public void encoderDriveInLine(double speed,
-                             double frontleftInches, double frontrightInches,
-                             double backleftInches, double backrightInches,
-                             double timeoutS) {
+                                   double frontleftInches, double frontrightInches,
+                                   double backleftInches, double backrightInches,
+                                   double timeoutS) {
         int newfrontLeftTarget;
         int newfrontRightTarget;
         int newbackLeftTarget;
@@ -316,7 +343,7 @@ public class AutoTest<pipeline> extends LinearOpMode {
             robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-              sleep(250);   // optional pause after each move
+            sleep(250);   // optional pause after each move
         }
     }
 

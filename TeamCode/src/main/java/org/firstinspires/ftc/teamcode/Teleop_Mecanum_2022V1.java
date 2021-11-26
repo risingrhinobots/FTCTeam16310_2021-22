@@ -98,12 +98,12 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     static final int CYCLE_MS = 1000;     // period of each cycle
     static final double MAX_POS = 0.6;     // Maximum rotational position
     static final double MIN_POS = 0.4;     // Minimum rotational position
-    static final double CLAW_MAX_POS = 0.75;     // Maximum rotational position
-    static final double CLAW_MIN_POS = 0.95;     // Minimum rotational position
+    static final double CLAW_MAX_POS = 0.85;     // Maximum rotational position
+    static final double CLAW_MIN_POS = 0.70;     // Minimum rotational position
     // Define class members
 
-    double position = 0.65;  //claw to be closed
-    double ClawReachPosition = 0.3;  // this position is for the claw to be full closed in
+    double position = 0.85;  //claw to be closed
+    double ClawReachPosition = 0.05;  // this position is for the claw to be full closed in
 
 
     @Override
@@ -189,28 +189,20 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             if (gamepad2.dpad_down) {
                 InLineEncoderDriveArm(ArmMotor, 0.1, 2, 5);
             }
-            if (gamepad1.dpad_up) {
-                ClawReachPosition = 0.3;
-                ClawReachServo.setPosition(ClawReachPosition);
-            }
-            if (gamepad1.dpad_down) {
-                ClawReachPosition = 0.8;
-                ClawReachServo.setPosition(ClawReachPosition);
-            }
 
 
-            //Claw is closed position
+            //Claw is open position
             if (gamepad1.a) {
-                position = 0.65;
+                position = 0.70;
                 ClawServo.setPosition(position);
                 // Display the current value
                 telemetry.addData("Servo Position", "%5.2f", position);
                 telemetry.addData(">", "Press Stop to end test.");
                 telemetry.update();
             }
-            //Claw is open position
+            //Claw is closed position
             if (gamepad1.b) {
-                position = 0.40;
+                position = 0.85;
                 ClawServo.setPosition(position);
                 // Display the current value
                 telemetry.addData("Servo Position", "%5.2f", position);
@@ -219,31 +211,16 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             }
 
             //claw is to the open position ready to pick the frieght
-            if (gamepad2.x) {
-                ClawReachPosition = 0.80;
+            if (gamepad1.x) {
+                ClawReachPosition = 0.05;
                 ClawReachServo.setPosition(ClawReachPosition);
             }
-            if (gamepad2.y) {
-                ClawReachPosition = 0.75;
+            if (gamepad1.y) {
+                ClawReachPosition = 0.4;
                 ClawReachServo.setPosition(ClawReachPosition);
             }
 
-            if (gamepad2.left_bumper) {
-                // Keep stepping up until we hit the max value.
-                // Keep stepping up until we hit the max value.
-                ClawReachPosition += INCREMENT;
-                if (ClawReachPosition >= CLAW_MAX_POS) {
-                    ClawReachPosition = CLAW_MAX_POS;
-                }
-                ClawReachServo.setPosition(ClawReachPosition);
-            }
-            else if (gamepad2.right_bumper) {
-                ClawReachPosition -= INCREMENT;
-                if (ClawReachPosition <= CLAW_MIN_POS) {
-                    ClawReachPosition = CLAW_MIN_POS;
-                }
-                ClawReachServo.setPosition(ClawReachPosition);
-            }
+
             if (gamepad1.left_bumper) {
                 encoderDriveInLine(0.8,35,35,35,35,2);
             }
@@ -257,13 +234,13 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             telemetry.addData(">", "Press Stop to end test.");
             telemetry.update();
             // slew the servo, according to the rampUp (direction) variable.
-            if (gamepad1.y) {
+            if (gamepad2.y) {
                 // Keep stepping up until we hit the max value.
                 position = 0; //stop
                 CarouselServo.setPower(position);
             }
 
-            if (gamepad1.x) {
+            if (gamepad2.x) {
                 // Keep stepping up until we hit the max value.
                 position = -1; //rotate right
                 CarouselServo.setPower(position);

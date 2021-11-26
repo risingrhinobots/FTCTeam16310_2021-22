@@ -74,20 +74,24 @@ public class Teleop_servo_Test extends LinearOpMode {
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        position =0.4;
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         servo = hardwareMap.get(Servo.class, "TestServo");
-        servo.setPosition(0.6);
+        servo.setPosition(position);
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         // servo.setDirection(Servo.Direction.FORWARD);
-
+        telemetry.addData("Servo Position", "%5.2f", position);
+        telemetry.addData(">", "Press Stop to end test.");
+        telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+        // Display the current value
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
