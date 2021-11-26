@@ -18,14 +18,13 @@ public class EncoderDriveArm extends LinearOpMode {
     double arvmovement;
     double timeoutS;
 
-    public void encoderDriveArm(double speed, double armmovement, double timeoutS)
+    public void encoderDriveArm(HardwarePushbot_TC robot, double speed, double armmovement, double timeoutS)
     {
         int newArmTarget;
 
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
-            robot.init(robot.hwMap);
             // Determine new target position, and pass to motor controller
             newArmTarget = robot.ArmMotor.getCurrentPosition() + (int) (armmovement * COUNTS_PER_INCH);
 
