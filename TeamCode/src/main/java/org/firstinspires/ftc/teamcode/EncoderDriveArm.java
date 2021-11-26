@@ -25,7 +25,7 @@ public class EncoderDriveArm extends LinearOpMode {
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
-
+            robot.init(robot.hwMap);
             // Determine new target position, and pass to motor controller
             newArmTarget = robot.ArmMotor.getCurrentPosition() + (int) (armmovement * COUNTS_PER_INCH);
 
