@@ -98,12 +98,15 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     static final int CYCLE_MS = 1000;     // period of each cycle
     static final double MAX_POS = 0.6;     // Maximum rotational position
     static final double MIN_POS = 0.4;     // Minimum rotational position
-    static final double CLAW_MAX_POS = 0.85;     // Maximum rotational position
-    static final double CLAW_MIN_POS = 0.70;     // Minimum rotational position
+    static final double CLAW_OPEN_POS = 0.85;
+    static final double CLAW_CLOSE_POS = 0.60;
+    static final double CLAWREACH_MAX_POS = 0.10;
+    static final double CLAWREACH_PICK_POS = 0.35;
+    static final double CLAWREACH_PULLIN_P0S = 0.90;
     // Define class members
 
-    double position = 0.85;  //claw to be closed
-    double ClawReachPosition = 0.05;  // this position is for the claw to be full closed in
+    double position = 0.60;  //claw to be closed
+    double ClawReachPosition = CLAWREACH_PULLIN_P0S;  // this position is for the claw to be full closed in
 
 
     @Override
@@ -193,7 +196,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
 
             //Claw is open position
             if (gamepad1.a) {
-                position = 0.70;
+                position = CLAW_OPEN_POS;
                 ClawServo.setPosition(position);
                 // Display the current value
                 telemetry.addData("Servo Position", "%5.2f", position);
@@ -202,7 +205,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             }
             //Claw is closed position
             if (gamepad1.b) {
-                position = 0.85;
+                position = CLAW_CLOSE_POS;
                 ClawServo.setPosition(position);
                 // Display the current value
                 telemetry.addData("Servo Position", "%5.2f", position);
@@ -212,20 +215,20 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
 
             //claw is to the open position ready to pick the frieght
             if (gamepad1.x) {
-                ClawReachPosition = 0.05;
+                ClawReachPosition = CLAWREACH_PICK_POS;
                 ClawReachServo.setPosition(ClawReachPosition);
             }
             if (gamepad1.y) {
-                ClawReachPosition = 0.4;
+                ClawReachPosition = CLAWREACH_MAX_POS;
                 ClawReachServo.setPosition(ClawReachPosition);
             }
 
 
             if (gamepad1.left_bumper) {
-                encoderDriveInLine(0.8,35,35,35,35,2);
+                encoderDriveInLine(0.8,25,25,25,25,2);
             }
             else if (gamepad1.right_bumper) {
-                encoderDriveInLine(0.8,-35,-35,-35,-35,2);
+                encoderDriveInLine(0.8,-25,-25,-25,-25,2);
             }
 
 

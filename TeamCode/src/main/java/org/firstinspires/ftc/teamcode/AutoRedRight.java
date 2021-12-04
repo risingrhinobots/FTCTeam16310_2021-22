@@ -29,18 +29,13 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import android.provider.Telephony;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.DuckPosDetermination.*;
-import org.firstinspires.ftc.teamcode.HardwarePushbot_TC;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -85,9 +80,9 @@ import org.openftc.easyopencv.OpenCvWebcam;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: RedLeftAuto", group="FreightFrenzy")
+@Autonomous(name="Pushbot: RedRightAuto", group="FreightFrenzy")
 //@Disabled
-public class AutoRedLeft extends LinearOpMode {
+public class AutoRedRight extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot_TC robot   = new HardwarePushbot_TC();   // Use a Pushbot's hardware
@@ -104,11 +99,11 @@ public class AutoRedLeft extends LinearOpMode {
     static final double CLAWREACH_MAX_POS = 0.10;
     static final double CLAWREACH_PICK_POS = 0.35;
     static final double CLAWREACH_PULLIN_P0S = 0.90;
-
+    double position = 0.85;
     double ArmMovement;
     double ArmMovementTimeout;
-    double CarouselPosition;
-
+    double CarouselPosition =0;
+    double ClawReachPosition = CLAWREACH_PULLIN_P0S;
     OpenCvWebcam webcam;
     InLineDuckPosDeterminationPipeline pipeline;
     @Override
@@ -196,77 +191,49 @@ public class AutoRedLeft extends LinearOpMode {
         // FORWARD DRIVE SAMPLE. reverse drive will be all negative values
         robot.ArmMotor.setDirection(DcMotor.Direction.REVERSE);
 
-
         //straffe towards the inside of the field before moving to the carousel
         encoderDriveInLine(0.2,-5,5,5,-5,2);
         //position arm for delivery based on duck position
-
         //Drive backword to the carousel
-        encoderDriveInLine(0.3,-19,-19,-19,-19,2);
+        encoderDriveInLine(0.3,-21,-21,-21,-21,2);
 
-
-        ElapsedTime carouselTimer = new ElapsedTime();
-        carouselTimer.reset();
-        carouselTimer.startTime();
-
-        while(carouselTimer.seconds() <= 4) {
-            CarouselPosition=-1;
-            robot.CarouselServo.setPower(CarouselPosition);
-        }
-
-        sleep(500);
-        CarouselPosition=0;
-        robot.CarouselServo.setPower(CarouselPosition);
-
-        //straffe left towards the middle of the field to position to move towards alliance hub
-        encoderDriveInLine(0.5,-10,10,10,-10,5);
-
-        // move back a little bit more
-        encoderDriveInLine(0.5,-5,-5,-5,-5,5);
-
-
-        //straffe left towards the middle of the field to position to move towards alliance hub
-        encoderDriveInLine(0.5,-30,30,30,-30,5);
+        //turn left towards the alliance hub - both left are negative and both right are positive
+        encoderDriveInLine(0.5,-18,18,-18,18,5);
 
         //move towards the alliance hub
-        encoderDriveInLine(0.5,27,27,27,27,5);
+        encoderDriveInLine(0.5,12,12,12,12,5);
 
         sleep(500);
         robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
-
-
-        if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
+        if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
             ArmMovement = 2;
             ArmMovementTimeout = 5;
-         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
+        } else if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
             ArmMovement = 4.5;
             ArmMovementTimeout = 7;
-             //move towards the alliance hub
-        } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
+            //move towards the alliance hub
+        } else if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
             ArmMovement = 7.5;
             ArmMovementTimeout = 9;
-       }
+        }
 
 
         //raise the arm according the duck position
         encoderDriveArmInLine(robot.ArmMotor, 0.1, -ArmMovement, ArmMovementTimeout);
-        sleep(2000);
+        sleep(500);
         //baesd on the level adjust any driving forward movement
-        if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
+        if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
             encoderDriveInLine(0.1,3,3,3,3,5);
             robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
-        } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
+        } else if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
             encoderDriveInLine(0.2,3.5,3.5,3.5,3,5);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
             //move towards the alliance hub
-        } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
+        } else if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
             encoderDriveInLine(0.2,7,7,7,7,5);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
         }
 
-        //open out the claw to open position
-      //  ClawReachPosition = 0.90;
-       // robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
         sleep(1500);
 
         //open the claw up so that the frieght drops on the alliance hub
@@ -274,36 +241,35 @@ public class AutoRedLeft extends LinearOpMode {
         robot.ClawServo.setPosition(CLAW_OPEN_POS);
 
         sleep(500);
-        //close the claw and pull back the claw reach servo
+
 
         //move back towards the storage unit
-        encoderDriveInLine(0.5,-30,-30,-30,-30,5);
+        encoderDriveInLine(0.5,-20,-20,-20,-20,5);
 
 
+        //close the claw and pull back the claw reach servo
         robot.ClawServo.setPosition(CLAW_CLOSE_POS);
         sleep(500);
 
         robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
 
-        robot.ClawServo.setPosition(CLAW_CLOSE_POS);
+        //TURN right towards warehouse
+        encoderDriveInLine(0.5,18,-18,18,-18,5);
+        //move into warehouse
+        encoderDriveInLine(0.5,20,20,20,20,5);
 
-      //strafe right towards the inside of the storage unit
-        encoderDriveInLine(0.2,12,-12,-12,12,2);
-        //baesd on the level adjust any driving forward movement
-        if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            encoderDriveInLine(0.1,-1,-1,-1,-1,5);
-        } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-            encoderDriveInLine(0.2,-2,-2,-2,-2,5);
-            //move towards the alliance hub
-        } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
-            encoderDriveInLine(0.2,-4,-4,-4,-4,5);
-        }
+        //straffe towards the inside of the field before moving to the carousel
+        encoderDriveInLine(0.2,5,-5,-5,5,2);
 
         encoderDriveArmInLine(robot.ArmMotor, 0.1, ArmMovement, 5);
+        //move into warehouse
+        encoderDriveInLine(0.5,40,40,40,40,5);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
+
+
 
 
     /*
@@ -503,10 +469,10 @@ public class AutoRedLeft extends LinearOpMode {
 
         // Volatile since accessed by OpMode thread w/o synchronization
         // Volatile since accessed by OpMode thread w/o synchronization
-        private volatile InLineDuckPosDeterminationPipeline.DuckPositionInLine position;
+        private volatile DuckPositionInLine position;
 
         {
-            position = InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT;
+            position = DuckPositionInLine.LEFT;
         }
 
         /*
@@ -645,7 +611,7 @@ public class AutoRedLeft extends LinearOpMode {
              */
             if(min == avg1) // Was it from region 1?
             {
-                position = InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT; // Record our analysis
+                position = DuckPositionInLine.LEFT; // Record our analysis
 
                 /*
                  * Draw a solid rectangle on top of the chosen region.
@@ -660,7 +626,7 @@ public class AutoRedLeft extends LinearOpMode {
             }
             else if(min == avg2) // Was it from region 2?
             {
-                position = InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER; // Record our analysis
+                position = DuckPositionInLine.CENTER; // Record our analysis
 
                 /*
                  * Draw a solid rectangle on top of the chosen region.
@@ -675,7 +641,7 @@ public class AutoRedLeft extends LinearOpMode {
             }
             else if(min == avg3) // Was it from region 3?
             {
-                position = InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT; // Record our analysis
+                position = DuckPositionInLine.RIGHT; // Record our analysis
 
                 /*
                  * Draw a solid rectangle on top of the chosen region.
@@ -690,7 +656,7 @@ public class AutoRedLeft extends LinearOpMode {
             }
             else if(min < avg1) // Was it from region 3?
             {
-                position = InLineDuckPosDeterminationPipeline.DuckPositionInLine.NODUCK; // Record our analysis
+                position = DuckPositionInLine.NODUCK; // Record our analysis
 
             }
 
@@ -706,7 +672,7 @@ public class AutoRedLeft extends LinearOpMode {
         /*
          * Call this from the OpMode thread to obtain the latest analysis
          */
-        public InLineDuckPosDeterminationPipeline.DuckPositionInLine getAnalysis()
+        public DuckPositionInLine getAnalysis()
         {
             return position;
         }
