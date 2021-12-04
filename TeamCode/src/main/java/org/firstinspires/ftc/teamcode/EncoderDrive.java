@@ -44,7 +44,7 @@ public class EncoderDrive extends LinearOpMode {
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
-
+            robot.init(robot.hwMap);
             // Determine new target position, and pass to motor controller
             newfrontLeftTarget = robot.frontLeft.getCurrentPosition() + (int) (frontleftInches * COUNTS_PER_INCH);
             newfrontRightTarget = robot.frontRight.getCurrentPosition() + (int) (frontrightInches * COUNTS_PER_INCH);

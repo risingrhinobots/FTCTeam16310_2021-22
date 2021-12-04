@@ -212,7 +212,7 @@ public class AutoTest<pipeline> extends LinearOpMode {
 
         //drive towards the alliance hub
         //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5); //TODO is the neutral position for the arm 0 or 2
-        encoderDriveArm.encoderDriveArm(0.1, 2, 5);
+        encoderDriveArm.encoderDriveArm(robot,.1, 2, 5);
         //move towards the storage unit
         //unoptimized encoderDriveInLine(0.5,-25,-25,-25,-25,5);
         encoderDrive.encoderDrive(0.5,-25,-25,-25,-25,5);
@@ -230,19 +230,19 @@ public class AutoTest<pipeline> extends LinearOpMode {
     public void armPosBasedOnDuckPos(DuckPosDeterminationPipeline.DuckPosition duckPos){
         if(duckPos == DuckPosDeterminationPipeline.DuckPosition.LEFT){
             //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5);
-            encoderDriveArm.encoderDriveArm(0.1, 2, 5);
+            encoderDriveArm.encoderDriveArm(robot,.1, 2, 5);
             telemetry.addData("Arm Pos", "Left");
             telemetry.update();
         }
         else if(duckPos == DuckPosDeterminationPipeline.DuckPosition.CENTER){
             //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 4, 7);
-            encoderDriveArm.encoderDriveArm(0.1, 4, 7);
+            encoderDriveArm.encoderDriveArm(robot,.1, 4, 7);
             telemetry.addData("Arm Pos", "Center");
             telemetry.update();
         }
         else if(duckPos == DuckPosDeterminationPipeline.DuckPosition.RIGHT){
             //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 6, 9);
-            encoderDriveArm.encoderDriveArm(0.1, 6, 9);
+            encoderDriveArm.encoderDriveArm(robot,0.1, 6, 9);
             telemetry.addData("Arm Pos", "Right");
             telemetry.update();
         }
