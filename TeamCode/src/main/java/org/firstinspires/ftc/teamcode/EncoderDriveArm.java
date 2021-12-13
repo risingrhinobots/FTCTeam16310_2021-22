@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.HardwareRenderer;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -17,14 +19,9 @@ public class EncoderDriveArm extends LinearOpMode {
     double speed;
     double armmovement;
     double timeoutS;
-    private DcMotor ArmMotor;
-public EncoderDriveArm(DcMotor ArmMotor){
-    this.ArmMotor = ArmMotor;
-    telemetry.addData("Status","Reached Constructor");
-    telemetry.update();
-    sleep(6000);
-}
-    public void encoderDriveArm(double speed, double armmovement, double timeoutS) {
+    private HardwarePushbot_TC robot;
+
+    public void encoderDriveArm(HardwarePushbot_TC robot, double speed, double armmovement, double timeoutS) {
         int newArmTarget;
 
 
@@ -32,12 +29,12 @@ public EncoderDriveArm(DcMotor ArmMotor){
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newArmTarget = ArmMotor.getCurrentPosition() + (int) (armmovement * COUNTS_PER_INCH);
-            ArmMotor.setPower(Math.abs(speed));
-            ArmMotor.setTargetPosition(newArmTarget);
+            newArmTarget = robot.ArmMotor.getCurrentPosition() + (int) (armmovement * COUNTS_PER_INCH);
+            robot.ArmMotor.setPower(Math.abs(speed));
+            robot.ArmMotor.setTargetPosition(newArmTarget);
 
             // Turn On RUN_TO_POSITION
-            ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
             // its target position, the motion will stop.  This is "safer" in the event that the robot will
@@ -45,11 +42,11 @@ public EncoderDriveArm(DcMotor ArmMotor){
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) && ArmMotor.isBusy()) {
+                    (runtime.seconds() < timeoutS) && robot.ArmMotor.isBusy()) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1", "Running to %7d ", newArmTarget);
-                telemetry.addData("Path2", "Running at %7d ", ArmMotor.getCurrentPosition());
+                telemetry.addData("Path2", "Running at %7d ", robot.ArmMotor.getCurrentPosition());
 
                 telemetry.update();
             }
