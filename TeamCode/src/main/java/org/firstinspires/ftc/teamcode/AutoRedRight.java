@@ -94,8 +94,8 @@ public class AutoRedRight extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.9;
     static final double     TURN_SPEED              = 0.3;
-    static final double CLAW_OPEN_POS = 0.85;
-    static final double CLAW_CLOSE_POS = 0.60;
+    static final double CLAW_OPEN_POS = 0.40;
+    static final double CLAW_CLOSE_POS = 0.25;
     static final double CLAWREACH_MAX_POS = 0.10;
     static final double CLAWREACH_PICK_POS = 0.35;
     static final double CLAWREACH_PULLIN_P0S = 0.90;
@@ -204,6 +204,7 @@ public class AutoRedRight extends LinearOpMode {
         encoderDriveInLine(0.5,12,12,12,12,5);
 
         sleep(500);
+
         robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
         if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
             ArmMovement = 2;
@@ -216,7 +217,6 @@ public class AutoRedRight extends LinearOpMode {
             ArmMovement = 7.5;
             ArmMovementTimeout = 9;
         }
-
 
         //raise the arm according the duck position
         encoderDriveArmInLine(robot.ArmMotor, 0.1, -ArmMovement, ArmMovementTimeout);
@@ -254,14 +254,17 @@ public class AutoRedRight extends LinearOpMode {
         robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
 
         //TURN right towards warehouse
-        encoderDriveInLine(0.5,18,-18,18,-18,5);
+        encoderDriveInLine(0.5,20,-20,20,-20,5);
         //move into warehouse
-        encoderDriveInLine(0.5,20,20,20,20,5);
+        encoderDriveInLine(0.5,30,30,30,30,5);
 
         //straffe towards the inside of the field before moving to the carousel
         encoderDriveInLine(0.2,5,-5,-5,5,2);
 
-        encoderDriveArmInLine(robot.ArmMotor, 0.1, ArmMovement, 5);
+        //move right a certain number of degrees for safety into warehouse
+
+
+                encoderDriveArmInLine(robot.ArmMotor, 0.1, ArmMovement, 5);
         //move into warehouse
         encoderDriveInLine(0.5,40,40,40,40,5);
 

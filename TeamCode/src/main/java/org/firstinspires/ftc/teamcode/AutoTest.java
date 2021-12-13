@@ -80,24 +80,25 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Autonomous(name="Pushbot: AutoTest1", group="FreightFrenzy")
 //@Disabled
 public class AutoTest<pipeline> extends LinearOpMode {
-
-    /* Declare OpMode members. */
-    HardwarePushbot_TC robot   = new HardwarePushbot_TC();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
-    static final double     COUNTS_PER_MOTOR_REV    = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1 ;   // 1  // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    /*
+        /* Declare OpMode members. */
+    HardwarePushbot_TC robot = new HardwarePushbot_TC();   // Use a Pushbot's hardware
+    private ElapsedTime runtime = new ElapsedTime();
+    static final double COUNTS_PER_MOTOR_REV = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 1;   // 1  // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 4;     // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.9;
-    static final double     TURN_SPEED              = 0.3;
+    static final double DRIVE_SPEED = 0.9;
+    static final double TURN_SPEED = 0.3;
     double position = 0.85;
-    double CarouselPosition =0;
+    double CarouselPosition = 0;
     double ClawReachPosition = 0.05;
     OpenCvWebcam webcam;
     DuckPosDeterminationPipeline pipeline;
     EncoderDrive encoderDrive;
     EncoderDriveArm encoderDriveArm;
+
     //TODO Remove sleeps and make it more optimized by using the class instead of the in line method
     @Override
     public void runOpMode() throws InterruptedException {
@@ -117,6 +118,7 @@ public class AutoTest<pipeline> extends LinearOpMode {
             public void onOpened() {
                 webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
             }
+
             @Override
             public void onError(int errorCode) {
                 telemetry.addData("Status", "Error: %7d", errorCode);
@@ -140,7 +142,7 @@ public class AutoTest<pipeline> extends LinearOpMode {
 
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
+        telemetry.addData("Path0", "Starting at %7d :%7d",
                 robot.frontLeft.getCurrentPosition(),
                 robot.frontRight.getCurrentPosition());
         telemetry.update();
@@ -148,217 +150,6 @@ public class AutoTest<pipeline> extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        // FORWARD DRIVE SAMPLE. reverse drive will be all negative values
-        robot.ArmMotor.setDirection(DcMotor.Direction.REVERSE);
-        robot.ClawReachServo.setPosition(ClawReachPosition);
-        robot.ClawServo.setPosition(position);
-        DuckPosDeterminationPipeline.DuckPosition duckPos = pipeline.getAnalysis();
-        //strafe towards the inside of the field before moving to the carousel
-        //unoptimized encoderDriveInLine(0.2,-5,5,5,-5,2);
-        encoderDrive.encoderDrive(0.2,-5,5,5,-5,2);
 
-        //Drive backward to the carousel
-        //unoptimized encoderDriveInLine(0.5,-20,-20,-20,-20,2);
-        encoderDrive.encoderDrive(0.5,-20,-20,-20,-20,2);
-        ElapsedTime carouselTimer = new ElapsedTime();
-        carouselTimer.reset();
-        carouselTimer.startTime();
-
-        while(runtime.seconds() <= 5) {
-            CarouselPosition=-1;
-            robot.CarouselServo.setPower(CarouselPosition);
-        }
-
-        sleep(500);
-
-        //strafe towards the middle of the field to position to move towards alliance hub
-        //unoptimized encoderDriveInLine(0.5,-40,40,40,-40,5);
-        encoderDrive.encoderDrive(0.5,-40,40,40,-40,5);
-        sleep(500);
-
-        //move towards the alliance hub
-        //unoptimized encoderDriveInLine(0.5,24,24,24,24,5);
-        encoderDrive.encoderDrive(0.5,24,24,24,24,5);
-        sleep(500);
-        //open out the claw to open position
-        telemetry.addData("Duck Position", "Duck Pos: %7d", pipeline.getAnalysis());
-        telemetry.update();
-        ClawReachPosition = 0.80;
-        robot.ClawReachServo.setPosition(ClawReachPosition);
-        sleep(500);
-        //position arm for delivery based on duck position
-        armPosBasedOnDuckPos(duckPos);
-        sleep(500);
-        //open the claw up so that the frieght drops on the alliance hub
-        position = 0.40;
-        robot.ClawServo.setPosition(position);
-
-        sleep(1000);
-        //close the claw and pull back the claw reach servo
-
-        //move back towards the storage unit
-        //unoptimized encoderDriveInLine(0.5,-25,-25,-25,-25,5);
-        encoderDrive.encoderDrive(0.5,-25,-25,-25,-25,5);
-        sleep(500);
-
-
-        position = 0.65;
-        robot.ClawServo.setPosition(position);
-        sleep(500);
-        ClawReachPosition = 0.30;
-        robot.ClawReachServo.setPosition(ClawReachPosition);
-
-        //drive towards the alliance hub
-        //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5); //TODO is the neutral position for the arm 0 or 2
-        encoderDriveArm.encoderDriveArm(robot,.1, 2, 5);
-        //move towards the storage unit
-        //unoptimized encoderDriveInLine(0.5,-25,-25,-25,-25,5);
-        encoderDrive.encoderDrive(0.5,-25,-25,-25,-25,5);
-
-        //strafe right towards the inside of the storage unit
-        //unoptimized encoderDriveInLine(0.2,5,-5,-5,5,2);
-        encoderDrive.encoderDrive(0.2,5,-5,-5,5,2);
-
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-    }
-
-
-    public void armPosBasedOnDuckPos(DuckPosDeterminationPipeline.DuckPosition duckPos){
-        if(duckPos == DuckPosDeterminationPipeline.DuckPosition.LEFT){
-            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 5);
-            encoderDriveArm.encoderDriveArm(robot,.1, 2, 5);
-            telemetry.addData("Arm Pos", "Left");
-            telemetry.update();
-        }
-        else if(duckPos == DuckPosDeterminationPipeline.DuckPosition.CENTER){
-            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 4, 7);
-            encoderDriveArm.encoderDriveArm(robot,.1, 4, 7);
-            telemetry.addData("Arm Pos", "Center");
-            telemetry.update();
-        }
-        else if(duckPos == DuckPosDeterminationPipeline.DuckPosition.RIGHT){
-            //unoptimized encoderDriveArmInLine(robot.ArmMotor, 0.1, 6, 9);
-            encoderDriveArm.encoderDriveArm(robot,0.1, 6, 9);
-            telemetry.addData("Arm Pos", "Right");
-            telemetry.update();
-        }
-    }
-    /*
-     *  Method to perform a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
-     */
-    public void encoderDriveInLine(double speed,
-                                   double frontleftInches, double frontrightInches,
-                                   double backleftInches, double backrightInches,
-                                   double timeoutS) {
-        int newfrontLeftTarget;
-        int newfrontRightTarget;
-        int newbackLeftTarget;
-        int newbackRightTarget;
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            newfrontLeftTarget = robot.frontLeft.getCurrentPosition() + (int)(frontleftInches * COUNTS_PER_INCH);
-            newfrontRightTarget = robot.frontRight.getCurrentPosition() + (int)(frontrightInches * COUNTS_PER_INCH);
-            newbackLeftTarget = robot.backLeft.getCurrentPosition() + (int)(backleftInches * COUNTS_PER_INCH);
-            newbackRightTarget = robot.backRight.getCurrentPosition() + (int)(backrightInches * COUNTS_PER_INCH);
-
-            robot.frontLeft.setTargetPosition(newfrontLeftTarget);
-            robot.frontRight.setTargetPosition(newfrontRightTarget);
-            robot.backLeft.setTargetPosition(newbackLeftTarget);
-            robot.backRight.setTargetPosition(newbackRightTarget);
-
-            // Turn On RUN_TO_POSITION
-            robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-            robot.frontLeft.setPower(Math.abs(speed));
-            robot.frontRight.setPower(Math.abs(speed));
-            robot.backLeft.setPower(Math.abs(speed));
-            robot.backRight.setPower(Math.abs(speed));
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (robot.frontLeft.isBusy() && robot.frontRight.isBusy() &&
-                            robot.backRight.isBusy() && robot.backLeft.isBusy())) {
-
-                // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newfrontLeftTarget,  newfrontRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                        robot.frontLeft.getCurrentPosition(),
-                        robot.frontRight.getCurrentPosition());
-                telemetry.update();
-            }
-
-            // Stop all motion;
-            robot.frontLeft.setPower(0);
-            robot.frontRight.setPower(0);
-            robot.backLeft.setPower(0);
-            robot.backRight.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            sleep(250);   // optional pause after each move
-        }
-    }
-
-
-    public void encoderDriveArmInLine(DcMotor ArmMotor, double speed, double armmovement, double timeoutS) {
-        int newArmTarget;
-
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            newArmTarget = ArmMotor.getCurrentPosition() + (int) (armmovement * COUNTS_PER_INCH);
-            ArmMotor.setPower(Math.abs(speed));
-            ArmMotor.setTargetPosition(newArmTarget);
-
-            // Turn On RUN_TO_POSITION
-            ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) && ArmMotor.isBusy()) {
-
-                // Display it for the driver.
-                telemetry.addData("Path1", "Running to %7d ", newArmTarget);
-                telemetry.addData("Path2", "Running at %7d ", ArmMotor.getCurrentPosition());
-
-                telemetry.update();
-            }
-
-            sleep(250);   // optional pause after each move
-
-        }
     }
 }
-
