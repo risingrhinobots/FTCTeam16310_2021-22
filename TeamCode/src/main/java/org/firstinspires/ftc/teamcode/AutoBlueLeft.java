@@ -95,8 +95,8 @@ public class AutoBlueLeft extends LinearOpMode {
     static final double     DRIVE_SPEED             = 0.9;
     static final double     TURN_SPEED              = 0.3;
     static final double CLAW_OPEN_POS = 0.40;
-    static final double CLAW_CLOSE_POS = 0.25;
-    static final double CLAWREACH_MAX_POS = 0.05;
+    static final double CLAW_CLOSE_POS = 0.20;
+    static final double CLAWREACH_MAX_POS = 0.10;
     static final double CLAWREACH_PICK_POS = 0.25;
     static final double CLAWREACH_PULLIN_P0S = 0.80;
    // double position = 0.85;
@@ -198,44 +198,52 @@ public class AutoBlueLeft extends LinearOpMode {
         encoderDriveInLine(0.3,22,22,22,22,2);
 
         //turn left towards the alliance hub
-        encoderDriveInLine(0.5,-18.5,18.5,-18.5,18.5,5);
+        encoderDriveInLine(0.5,-19,19,-19,19,5);
 
-        //move towards the alliance hub
-        encoderDriveInLine(0.5,12,12,12,12,5);
-
+        //raise the arm as per the duck position
         sleep(500);
 
         robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
         if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            ArmMovement = 3.25;
+            ArmMovement = 2.6;
             ArmMovementTimeout = 5;
+            telemetry.addData("Duck position", "Left");
         } else if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-            ArmMovement = 6.5;
+            ArmMovement = 5.5;
             ArmMovementTimeout = 7;
+            telemetry.addData("Duck position", "Middle");
             //move towards the alliance hub
         } else if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
-            ArmMovement = 9;
+            ArmMovement = 7.5;
             ArmMovementTimeout = 9;
+            telemetry.addData("Duck position", "Right");
         }
-
+        telemetry.update();
         //raise the arm according the duck position
         encoderDriveArmInLine(robot.ArmMotor, 0.1, -ArmMovement, ArmMovementTimeout);
+
+        //move towards the alliance hub
+        encoderDriveInLine(0.5,13.5,13.5,13.5,13.5,5);
+
         sleep(500);
+
         //baesd on the level adjust any driving forward movement
         if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            encoderDriveInLine(0.1,3,3,3,3,5);
+            encoderDriveInLine(0.1,1.5,1.5,1.5,1.5,5);
             robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
         } else if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-            encoderDriveInLine(0.2,3.5,3.5,3.5,3,5);
+            encoderDriveInLine(0.2,2.5,2.5,2.5,2.5,5);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
             //move towards the alliance hub
         } else if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
-            encoderDriveInLine(0.2,7,7,7,7,5);
+            encoderDriveInLine(0.2,4.5,4.5,4.5,4.5,5);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
         }
 
 
-        sleep(1500);
+        sleep(300);
+
+
 
         //open the claw up so that the frieght drops on the alliance hub
 
@@ -255,17 +263,19 @@ public class AutoBlueLeft extends LinearOpMode {
         robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
 
         //TURN left towards warehouse
-        encoderDriveInLine(0.5,-18.5,18.5,-18.5,18.5,5);
+        encoderDriveInLine(0.5,-19,19,-19,19,5);
 
         //straffe to avoid barrier
         encoderDriveInLine(0.2,-4.25,4.25,4.25,-4.25,4);
 
         //move into warehouse
         encoderDriveInLine(0.5,60,60,60,60,5);
-        encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, ArmMovementTimeout);
+
+        encoderDriveArmInLine(robot.ArmMotor, 0.1,ArmMovement, ArmMovementTimeout);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+        sleep(5000);
     }
 
 

@@ -209,13 +209,13 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 telemetry.update();
             }
 
-            /*claw is to the open position ready to pick the frieght
+
             if (gamepad1.x) {
                 ClawReachPosition = CLAWREACH_PICK_POS;
                 ClawReachServo.setPosition(ClawReachPosition);
             }
 
-
+         /*claw is to the open position ready to pick the frieght
             if (gamepad1.y) {
                 ClawReachPosition = CLAWREACH_MAX_POS;
                 ClawReachServo.setPosition(ClawReachPosition);
@@ -234,7 +234,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             telemetry.addData("Servo Position", "%5.2f", ClawReachPosition);
             telemetry.addData(">", "Press Stop to end test.");
             telemetry.update();
-            // slew the servo, according to the rampUp (direction) variable.
+            // y on gamepad 2 is the capping position
             if (gamepad2.y) {
                 // Capping arm position
                 InLineEncoderDriveArm(ArmMotor, 0.2, -12, 8);
@@ -267,11 +267,12 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             if (gamepad2.dpad_down) {
                 InLineEncoderDriveArm(ArmMotor, 0.2, 2, 5);
             }
+            //position ARM for capping
             if (gamepad2.left_bumper) {
                 ClawReachPosition = CLAWREACH_PICK_POS;
                 ClawReachServo.setPosition(ClawReachPosition);
             }
-
+            //position the claw reach to drop
             if (gamepad2.right_bumper) {
                 ClawReachPosition = CLAWREACH_MAX_POS;
                 ClawReachServo.setPosition(ClawReachPosition);

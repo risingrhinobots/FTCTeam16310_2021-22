@@ -95,7 +95,7 @@ public class AutoBlueRight extends LinearOpMode {
     static final double     DRIVE_SPEED             = 0.9;
     static final double     TURN_SPEED              = 0.3;
     static final double CLAW_OPEN_POS = 0.40;
-    static final double CLAW_CLOSE_POS = 0.25;
+    static final double CLAW_CLOSE_POS = 0.20;
     static final double CLAWREACH_MAX_POS = 0.10;
     static final double CLAWREACH_PICK_POS = 0.25;
     static final double CLAWREACH_PULLIN_P0S = 0.80;
@@ -198,19 +198,19 @@ public class AutoBlueRight extends LinearOpMode {
         encoderDriveInLine(0.3,-19.0,19.0,-19.0,19.0,5);
 
         //Straffe right to the carousel
-        encoderDriveInLine(0.4,22.9,-22.9,-22.9,22.9,17);
+        encoderDriveInLine(0.4,22.9,-22.9,-22.9,22.9,5);
 
-     sleep(300);
+        sleep(300);
 
      //Slowly straffe right to the carousel
-     encoderDriveInLine(0.1,3,-3,-3,3,4.2);
+     encoderDriveInLine(0.1,3,-3,-3,3,5);
 
         //CAROUSEL TIME
         ElapsedTime carouselTimer = new ElapsedTime();
         carouselTimer.reset();
         carouselTimer.startTime();
 
-        while(carouselTimer.seconds() <= 4) {
+        while(carouselTimer.seconds() <= 3) {
             CarouselPosition= 1;
             robot.CarouselServo.setPower(CarouselPosition);
         }
@@ -219,61 +219,51 @@ public class AutoBlueRight extends LinearOpMode {
         CarouselPosition=0;
         robot.CarouselServo.setPower(CarouselPosition);
 
-        //Move left to align with shipping hub
-        //encoderDriveInLine(0.4,-6.0,6.0,6.0,-6.0,17);
-
-        //turn left 90 degrees
-       // encoderDriveInLine(0.3,-.5,.5,-.5,.5,5);
-
         //move forward to align with the shipping hub
-        encoderDriveInLine(0.5,38.5,38.5,38.5,38.5,20);
+        encoderDriveInLine(0.5,37,37,37,37,20);
 
         //turn left towards the shipping hub
-        encoderDriveInLine(0.3,-18,18,-18,18,5);
-
-        //move towards the shipping hub
-        encoderDriveInLine(0.5,17,17,17,17,10);
-
-        sleep(500);
+        encoderDriveInLine(0.3,-19,19,-19,19,5);
         robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
         if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            ArmMovement = 2.55;
+            ArmMovement = 2.6;
             ArmMovementTimeout = 5;
+            telemetry.addData("Duck position", "Left");
         } else if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-            ArmMovement = 6.5;
+            ArmMovement = 5.5;
             ArmMovementTimeout = 7;
+            telemetry.addData("Duck position", "Middle");
             //move towards the alliance hub
         } else if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
-            ArmMovement = 9.0;
+            ArmMovement = 7.5;
             ArmMovementTimeout = 9;
+            telemetry.addData("Duck position", "Right");
         }
-
-
+        telemetry.update();
         //raise the arm according the duck position
         encoderDriveArmInLine(robot.ArmMotor, 0.1, -ArmMovement, ArmMovementTimeout);
+
+        //move towards the alliance hub
+        encoderDriveInLine(0.5,23.5,23.5,23.5,23.5,5);
         sleep(200);
+
         //baesd on the level adjust any driving forward movement
         if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            encoderDriveInLine(0.1,3,3,3,3,5);
+            encoderDriveInLine(0.1,1.5,1.5,1.5,1.5,5);
             robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
         } else if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-            encoderDriveInLine(0.2,6.0,6.0,6.0,6.0,5);
+            encoderDriveInLine(0.2,2.5,2.5,2.5,2.5,5);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
-            //move towards the alliance hub
         } else if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
-            encoderDriveInLine(0.2,9,9,9,9,5);
+            encoderDriveInLine(0.2,4.5,4.5,4.5,4.5,5);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
         }
-
-
+        sleep(300);
 
         //open the claw up so that the frieght drops on the alliance hub
-
         robot.ClawServo.setPosition(CLAW_OPEN_POS);
 
-        sleep(100);
-
-
+        sleep(300);
         //move back towards the wall
         encoderDriveInLine(0.5,-32,-32,-32,-32,10);
 
@@ -285,12 +275,15 @@ public class AutoBlueRight extends LinearOpMode {
         robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
 
         //straffe left towards the storage unit
-        encoderDriveInLine(0.3,-19.5,19.5,19.5,-19.5,9);
+        encoderDriveInLine(0.3,-17.5,17.5,17.5,-17.5,9);
+
+
+
 
         sleep(100);
-        encoderDriveArmInLine(robot.ArmMotor, 0.1, 2, 10);
-        //move back towards the wall
-   //     encoderDriveInLine(0.2,-13.5,-13.5,-13.5,-13.5,10);
+        encoderDriveArmInLine(robot.ArmMotor, 0.1, ArmMovement, ArmMovementTimeout);
+
+        sleep(2000);
 
 
 
