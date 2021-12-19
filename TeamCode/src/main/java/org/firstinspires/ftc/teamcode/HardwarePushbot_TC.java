@@ -118,9 +118,6 @@ public class HardwarePushbot_TC
         backRight.setPower(0);
 
 
-
-
-
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);

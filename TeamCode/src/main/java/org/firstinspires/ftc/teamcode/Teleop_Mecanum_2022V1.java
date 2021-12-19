@@ -78,7 +78,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
 
     // Declare OpMode members.
    // EncoderDriveArm encoderDriveArm = new EncoderDriveArm();
-    HardwarePushbot_TC robot = new HardwarePushbot_TC();
+  //  HardwarePushbot_TC robot = new HardwarePushbot_TC();
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor FrontLeftDrive = null;
     private DcMotor FrontRightDrive = null;
@@ -93,17 +93,21 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = 5.25;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double DRIVE_SPEED = 0.3;
-    static final double INCREMENT = 0.005;     // amount to slew servo each CYCLE_MS cycle
-    static final int CYCLE_MS = 1000;     // period of each cycle
-    static final double MAX_POS = 0.6;     // Maximum rotational position
-    static final double MIN_POS = 0.4;     // Minimum rotational position
+  //  static final double DRIVE_SPEED = 0.3;
+  //  static final double INCREMENT = 0.005;     // amount to slew servo each CYCLE_MS cycle
+  //  static final int CYCLE_MS = 1000;     // period of each cycle
+  //  static final double MAX_POS = 0.6;     // Maximum rotational position
+  //  static final double MIN_POS = 0.4;     // Minimum rotational position
     static final double CLAW_OPEN_POS = 0.35;
     static final double CLAW_CLOSE_POS = 0.22;
     static final double CLAWREACH_MAX_POS = 0.05;
     static final double CLAWREACH_PICK_POS = 0.25;
 
     static final double CLAWREACH_PULLIN_P0S = 0.80;
+    double driveboost= 0.775;
+    double turnboost =0.6;
+    double strafeboost = 0.6;
+
     // Define class members
 
    double position = 0.25;  //claw to be closed
@@ -160,10 +164,13 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             double turn =0;
             double strafe = 0;
 
+       /*     driveboost= 0.775;
+            turnboost =0.6;
+            strafeboost = 0.6;*/
 
-            drive = 0.775 *  (-gamepad1.left_stick_y);
-            turn  = 0.6 * (gamepad1.left_stick_x);
-            strafe = 0.6 * (gamepad1.right_stick_x);
+            drive = driveboost *  (-gamepad1.left_stick_y);
+            turn  = turnboost * (gamepad1.left_stick_x);
+            strafe = strafeboost * (gamepad1.right_stick_x);
 
 
             // Choose to drive using either Tank Mode, or POV Mode
@@ -186,8 +193,6 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             FrontRightDrive.setPower(FrontRightPower);
             BackLeftDrive.setPower(BackLeftPower);
             BackRightDrive.setPower(BackRightPower);
-
-
 
 
             //Claw is open position
@@ -221,6 +226,20 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 ClawReachServo.setPosition(ClawReachPosition);
             }
 */
+            if (gamepad1.dpad_left) {
+                driveboost= 0.3;
+                turnboost =0.3;
+                strafeboost = 0.3;
+            }
+            if (gamepad1.dpad_right) {
+                driveboost= 0.775;
+                turnboost =0.6;
+                strafeboost = 0.6;
+            }
+
+            if (gamepad1.dpad_down) {
+                InLineEncoderDriveArm(ArmMotor, 0.2, 2, 5);
+            }
 
             if (gamepad1.left_bumper) {
                 encoderDriveInLine(0.8,25,25,25,25,2);

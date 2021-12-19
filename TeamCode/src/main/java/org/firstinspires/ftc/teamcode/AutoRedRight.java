@@ -132,8 +132,8 @@ public class AutoRedRight extends LinearOpMode {
         });
 
         telemetry.addData("Analysis", pipeline.getAnalysis());
-        telemetry.update();
-
+        //telemetry.update();
+        telemetry.addData("Running Program", "Red Right");
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders and Setting up webcam pipeline");    //
         telemetry.update();
@@ -150,11 +150,11 @@ public class AutoRedRight extends LinearOpMode {
 
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
+   /*     telemetry.addData("Path0",  "Starting at %7d :%7d",
                 robot.frontLeft.getCurrentPosition(),
                 robot.frontRight.getCurrentPosition());
         telemetry.addData("Analysis", pipeline.getAnalysis());
-        telemetry.update();
+        telemetry.update();*/
 
         robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
         robot.ClawServo.setPosition(CLAW_CLOSE_POS);
@@ -264,6 +264,9 @@ public class AutoRedRight extends LinearOpMode {
 
         //move into warehouse
         encoderDriveInLine(0.5,60,60,60,60,5);
+
+        //strafe left inside the warehouse
+        encoderDriveInLine( 0.5, -20, 20,20,-20, 5);
 
         //move right a certain number of degrees for safety into warehouse
         encoderDriveArmInLine(robot.ArmMotor, 0.1, ArmMovement, ArmMovementTimeout);

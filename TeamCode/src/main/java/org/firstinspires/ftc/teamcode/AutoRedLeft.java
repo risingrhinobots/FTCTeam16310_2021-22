@@ -99,11 +99,12 @@ public class AutoRedLeft extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.9;
     static final double     TURN_SPEED              = 0.3;
+
     static final double CLAW_OPEN_POS = 0.40;
-    static final double CLAW_CLOSE_POS = 0.25;
+    static final double CLAW_CLOSE_POS = 0.20;
     static final double CLAWREACH_MAX_POS = 0.10;
-    static final double CLAWREACH_PICK_POS = 0.35;
-    static final double CLAWREACH_PULLIN_P0S = 0.90;
+    static final double CLAWREACH_PICK_POS = 0.25;
+    static final double CLAWREACH_PULLIN_P0S = 0.75;
 
     double ArmMovement;
     double ArmMovementTimeout;
@@ -137,8 +138,8 @@ public class AutoRedLeft extends LinearOpMode {
         });
 
         telemetry.addData("Analysis", pipeline.getAnalysis());
-        telemetry.update();
-
+       // telemetry.update();
+        telemetry.addData("Running Program", "Red Left");
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders and Setting up webcam pipeline");    //
         telemetry.update();
@@ -155,11 +156,11 @@ public class AutoRedLeft extends LinearOpMode {
 
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
+    /*    telemetry.addData("Path0",  "Starting at %7d :%7d",
                 robot.frontLeft.getCurrentPosition(),
                 robot.frontRight.getCurrentPosition());
         telemetry.addData("Analysis", pipeline.getAnalysis());
-        telemetry.update();
+        telemetry.update();*/
 
         robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
         robot.ClawServo.setPosition(CLAW_CLOSE_POS);
@@ -235,6 +236,7 @@ public class AutoRedLeft extends LinearOpMode {
 
 
         robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
+        sleep(500);
         if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
             ArmMovement = 2;
             ArmMovementTimeout = 5;

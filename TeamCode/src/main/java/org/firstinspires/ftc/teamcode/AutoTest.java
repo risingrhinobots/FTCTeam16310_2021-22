@@ -78,7 +78,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
  */
 
 @Autonomous(name="Pushbot: AutoTest1", group="FreightFrenzy")
-//@Disabled
+@Disabled
 public class AutoTest<pipeline> extends LinearOpMode {
     /*
         /* Declare OpMode members. */

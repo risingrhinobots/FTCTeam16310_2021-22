@@ -107,7 +107,8 @@ public class AutoBlueRight extends LinearOpMode {
     OpenCvWebcam webcam;
     InLineDuckPosDeterminationPipeline pipeline;
     @Override
-    public void runOpMode() throws InterruptedException {
+
+   public void runOpMode() throws InterruptedException {
 
         /*
          * Initialize the drive system variables.
@@ -132,17 +133,18 @@ public class AutoBlueRight extends LinearOpMode {
         });
 
         telemetry.addData("Analysis", pipeline.getAnalysis());
-        telemetry.update();
+   //     telemetry.update();
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders and Setting up webcam pipeline");    //
+        telemetry.addData("Running Program", "Blue Right");
+        telemetry.addData("Status", "Resetting Encoders and Setting up webcam pipeline");
         telemetry.update();
-
-       /* robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+/*
+        robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);*/
-
+        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+*/
         robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -150,21 +152,28 @@ public class AutoBlueRight extends LinearOpMode {
 
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
+      /*  telemetry.addData("Path0",  "Starting at %7d :%7d",
                 robot.frontLeft.getCurrentPosition(),
                 robot.frontRight.getCurrentPosition());
         telemetry.addData("Analysis", pipeline.getAnalysis());
-        telemetry.update();
+        telemetry.update();*/
 
         robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
         robot.ClawServo.setPosition(CLAW_CLOSE_POS);
 
+        // Stop all motion;
+        robot.frontLeft.setPower(0);
+        robot.frontRight.setPower(0);
+        robot.backLeft.setPower(0);
+        robot.backRight.setPower(0);
+
+        sleep(2000);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         //  pipeline = new DuckPositionDetermination();
-        /*
+/*
         while (opModeIsActive()) {
 
             telemetry.addData("Frame Count", webcam.getFrameCount());
@@ -178,8 +187,8 @@ public class AutoBlueRight extends LinearOpMode {
             telemetry.update();
             break;
 
-        } */
-
+        }
+*/
         InLineDuckPosDeterminationPipeline.DuckPositionInLine position1;
         {
             position1 = InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT;
@@ -202,8 +211,8 @@ public class AutoBlueRight extends LinearOpMode {
 
         sleep(300);
 
-     //Slowly straffe right to the carousel
-     encoderDriveInLine(0.1,3,-3,-3,3,5);
+        //Slowly straffe right to the carousel
+         encoderDriveInLine(0.1,3,-3,-3,3,5);
 
         //CAROUSEL TIME
         ElapsedTime carouselTimer = new ElapsedTime();

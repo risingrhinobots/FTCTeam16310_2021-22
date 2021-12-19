@@ -132,7 +132,8 @@ public class AutoBlueLeft extends LinearOpMode {
         });
 
         telemetry.addData("Analysis", pipeline.getAnalysis());
-        telemetry.update();
+  //      telemetry.update();
+        telemetry.addData("Running Program", "Blue Left");
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders and Setting up webcam pipeline");    //
