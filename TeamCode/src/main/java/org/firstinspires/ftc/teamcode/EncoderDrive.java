@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class EncoderDrive extends LinearOpMode {
-    HardwarePushbot_TC robot = new HardwarePushbot_TC();
+    //HardwarePushbot_TC robot = new HardwarePushbot_TC();
     static final double COUNTS_PER_MOTOR_REV = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 1;   // 1  // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_INCHES = 5.25;     // For figuring circumference
@@ -20,22 +20,10 @@ public class EncoderDrive extends LinearOpMode {
     static final double DRIVE_SPEED = 0.4;
     static final double TURN_SPEED = 0.3;
     private ElapsedTime runtime =  new ElapsedTime();
-    double speed;
-    double frontleftInches;
-    double frontrightInches;
-    double backleftInches;
-    double backrightInches;
-    double timeoutS;
 
-    public EncoderDrive(/*double speed, double frontleftInches, double frontrightInches, double backleftInches, double backrightInches, double timeoutS*/) {}
-   /* this.speed = speed;
-    this.frontrightInches = frontrightInches;
-    this.frontleftInches = frontleftInches;
-    this.backleftInches = backleftInches;
-    this.backrightInches = backrightInches;
-    this.timeoutS = timeoutS;
-    */
-    public void encoderDrive(double speed, double frontleftInches, double frontrightInches, double backleftInches, double backrightInches, double timeoutS)
+
+    public EncoderDrive(){}
+    public void encoderDrive(HardwarePushbot_TC robot, double speed, double frontleftInches, double frontrightInches, double backleftInches, double backrightInches, double timeoutS)
     {
         int newfrontLeftTarget;
         int newfrontRightTarget;
