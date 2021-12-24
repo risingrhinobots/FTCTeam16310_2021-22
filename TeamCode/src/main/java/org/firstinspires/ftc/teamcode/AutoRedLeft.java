@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.*;
+
 import android.provider.Telephony;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -92,20 +94,6 @@ public class AutoRedLeft extends LinearOpMode {
     /* Declare OpMode members. */
     HardwarePushbot_TC robot   = new HardwarePushbot_TC();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
-    static final double     COUNTS_PER_MOTOR_REV    = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1 ;   // 1  // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.9;
-    static final double     TURN_SPEED              = 0.3;
-
-    static final double CLAW_OPEN_POS = 0.40;
-    static final double CLAW_CLOSE_POS = 0.20;
-    static final double CLAWREACH_MAX_POS = 0.10;
-    static final double CLAWREACH_PICK_POS = 0.25;
-    static final double CLAWREACH_PULLIN_P0S = 0.75;
-
     double ArmMovement;
     double ArmMovementTimeout;
     double CarouselPosition;
@@ -239,14 +227,14 @@ public class AutoRedLeft extends LinearOpMode {
         robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
         sleep(500);
         if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            ArmMovement = 2;
+            ArmMovement = ARMMOVEMENT_LOW;
             ArmMovementTimeout = 5;
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-            ArmMovement = 4.5;
+            ArmMovement = ARMMOVEMENT_MID;
             ArmMovementTimeout = 7;
             //move towards the alliance hub
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
-            ArmMovement = 7.5;
+            ArmMovement = ARMMOVEMENT_HIGH;
             ArmMovementTimeout = 9;
         }
 
