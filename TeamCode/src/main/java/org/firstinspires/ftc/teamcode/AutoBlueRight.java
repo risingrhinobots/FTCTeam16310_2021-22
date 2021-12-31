@@ -112,7 +112,7 @@ public class AutoBlueRight extends LinearOpMode {
         pipeline = new InLineDuckPosDeterminationPipeline();
         webcam.setPipeline(pipeline);
         webcam.setMillisecondsPermissionTimeout(2500);
-        sensorRange = hardwareMap.get(DistanceSensor .class, "DistanceSensor");
+        sensorRange = hardwareMap.get(DistanceSensor.class, "DistanceSensor");
         Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
