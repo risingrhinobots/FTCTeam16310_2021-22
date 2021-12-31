@@ -371,7 +371,7 @@ public class AutoBlueRight extends LinearOpMode {
         }
     }
     public void drive(double speed){
-        encoderDriveInLine(0.4,22.9,-22.9,-22.9,22.9,5);
+        // for reference: encoderDriveInLine(0.4,22.9,-22.9,-22.9,22.9,5);
         robot.frontLeft.setPower(speed);
         robot.frontRight.setPower(-speed);
         robot.backLeft.setPower(-speed);

@@ -380,10 +380,10 @@ public class AutoRedLeft extends LinearOpMode {
     }
 
     public void drive(double speed){
-        robot.frontLeft.setPower(speed);
-        robot.frontRight.setPower(speed);
-        robot.backLeft.setPower(speed);
-        robot.backRight.setPower(speed);
+        robot.frontLeft.setPower(-speed);
+        robot.frontRight.setPower(-speed);
+        robot.backLeft.setPower(-speed);
+        robot.backRight.setPower(-speed);
     }
     public void encoderDriveArmInLine(DcMotor ArmMotor, double speed, double armmovement, double timeoutS) {
         int newArmTarget;
