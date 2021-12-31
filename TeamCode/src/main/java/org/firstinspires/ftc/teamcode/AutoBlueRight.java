@@ -30,10 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.*;
-
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -85,7 +87,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Autonomous(name="Pushbot: BlueRightAuto", group="FreightFrenzy")
 //@Disabled
 public class AutoBlueRight extends LinearOpMode {
-
+    private DistanceSensor sensorRange;
     /* Declare OpMode members. */
     HardwarePushbot_TC robot   = new HardwarePushbot_TC();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
@@ -110,6 +112,8 @@ public class AutoBlueRight extends LinearOpMode {
         pipeline = new InLineDuckPosDeterminationPipeline();
         webcam.setPipeline(pipeline);
         webcam.setMillisecondsPermissionTimeout(2500);
+        sensorRange = hardwareMap.get(DistanceSensor .class, "DistanceSensor");
+        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
@@ -196,14 +200,10 @@ public class AutoBlueRight extends LinearOpMode {
         //turn left 90 degrees
         encoderDriveInLine(0.3,-19.0,19.0,-19.0,19.0,5);
 
-        //Straffe right to the carousel
-        encoderDriveInLine(0.4,22.9,-22.9,-22.9,22.9,5);
-
-        sleep(300);
-
-        //Slowly straffe right to the carousel
-         encoderDriveInLine(0.1,3,-3,-3,3,5);
-
+        //Strafe right to the carousel
+        while(sensorRange.getDistance(DistanceUnit.INCH) >= distance){
+            drive(0.4);
+        }
         //CAROUSEL TIME
         ElapsedTime carouselTimer = new ElapsedTime();
         carouselTimer.reset();
@@ -370,7 +370,13 @@ public class AutoBlueRight extends LinearOpMode {
             sleep(250);   // optional pause after each move
         }
     }
-
+    public void drive(double speed){
+        encoderDriveInLine(0.4,22.9,-22.9,-22.9,22.9,5);
+        robot.frontLeft.setPower(speed);
+        robot.frontRight.setPower(-speed);
+        robot.backLeft.setPower(-speed);
+        robot.backRight.setPower(speed);
+    }
 
     public void encoderDriveArmInLine(DcMotor ArmMotor, double speed, double armmovement, double timeoutS) {
         int newArmTarget;

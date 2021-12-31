@@ -83,7 +83,7 @@ public class HardwarePushbot_TC
     static final double ARMMOVEMENT_LOW = 2.6;
     static final double ARMMOVEMENT_MID = 5.5;
     static final double ARMMOVEMENT_HIGH = 7.5;
-
+    static final double distance = 3.75;
 
 
     /* local OpMode members. */

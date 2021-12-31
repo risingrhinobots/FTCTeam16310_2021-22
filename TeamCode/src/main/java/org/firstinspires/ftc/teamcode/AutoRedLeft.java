@@ -30,17 +30,19 @@
 package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.*;
-
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import android.provider.Telephony;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.DuckPosDetermination.*;
 import org.firstinspires.ftc.teamcode.HardwarePushbot_TC;
 import org.opencv.core.Core;
@@ -90,6 +92,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Autonomous(name="Pushbot: RedLeftAuto", group="FreightFrenzy")
 //@Disabled
 public class AutoRedLeft extends LinearOpMode {
+    private DistanceSensor sensorRange;
 
     /* Declare OpMode members. */
     HardwarePushbot_TC robot   = new HardwarePushbot_TC();   // Use a Pushbot's hardware
@@ -114,6 +117,8 @@ public class AutoRedLeft extends LinearOpMode {
         pipeline = new InLineDuckPosDeterminationPipeline();
         webcam.setPipeline(pipeline);
         webcam.setMillisecondsPermissionTimeout(2500);
+        sensorRange = hardwareMap.get(DistanceSensor .class, "DistanceSensor");
+        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
@@ -142,8 +147,6 @@ public class AutoRedLeft extends LinearOpMode {
         robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
         // Send telemetry message to indicate successful Encoder reset
     /*    telemetry.addData("Path0",  "Starting at %7d :%7d",
                 robot.frontLeft.getCurrentPosition(),
@@ -191,9 +194,10 @@ public class AutoRedLeft extends LinearOpMode {
         encoderDriveInLine(0.2,-5,5,5,-5,2);
         //position arm for delivery based on duck position
         encoderDrive.encoderDrive(robot,0.2,-5,5,5,-5,2);
-        //Drive backword to the carousel
-        encoderDriveInLine(0.3,-20.5,-20.5,-20.5,-20.5,2);
-
+        //Drive backward to the carousel
+        while(sensorRange.getDistance(DistanceUnit.INCH) >= distance){
+            drive(0.4);
+        }
 
         ElapsedTime carouselTimer = new ElapsedTime();
         carouselTimer.reset();
@@ -375,7 +379,12 @@ public class AutoRedLeft extends LinearOpMode {
         }
     }
 
-
+    public void drive(double speed){
+        robot.frontLeft.setPower(speed);
+        robot.frontRight.setPower(speed);
+        robot.backLeft.setPower(speed);
+        robot.backRight.setPower(speed);
+    }
     public void encoderDriveArmInLine(DcMotor ArmMotor, double speed, double armmovement, double timeoutS) {
         int newArmTarget;
 
