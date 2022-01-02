@@ -75,9 +75,9 @@ public class HardwarePushbot_TC
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.9;
     static final double     TURN_SPEED              = 0.3;
-    static final double CLAW_OPEN_POS = 0.40;
-    static final double CLAW_CLOSE_POS = 0.20;
-    static final double CLAWREACH_MAX_POS = 0.10;
+    static final double CLAW_OPEN_POS = 0.35;
+    static final double CLAW_CLOSE_POS = 0.22;
+    static final double CLAWREACH_MAX_POS = 0.05;
     static final double CLAWREACH_PICK_POS = 0.25;
     static final double CLAWREACH_PULLIN_P0S = 0.80;
     static final double ARMMOVEMENT_LOW = 2.6;

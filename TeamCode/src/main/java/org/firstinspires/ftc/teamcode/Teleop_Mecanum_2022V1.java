@@ -57,6 +57,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.*;
 
 
 /**
@@ -98,19 +99,12 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
   //  static final int CYCLE_MS = 1000;     // period of each cycle
   //  static final double MAX_POS = 0.6;     // Maximum rotational position
   //  static final double MIN_POS = 0.4;     // Minimum rotational position
-    static final double CLAW_OPEN_POS = 0.35;
-    static final double CLAW_CLOSE_POS = 0.22;
-    static final double CLAWREACH_MAX_POS = 0.05;
-    static final double CLAWREACH_PICK_POS = 0.25;
-
-    static final double CLAWREACH_PULLIN_P0S = 0.80;
     double driveboost= 0.775;
     double turnboost =0.6;
     double strafeboost = 0.6;
-
     // Define class members
 
-   double position = 0.25;  //claw to be closed
+   double position = 0.25;  //claw to be closed8
     double ClawReachPosition = CLAWREACH_PULLIN_P0S;  // this position is for the claw to be full closed in
 
 
