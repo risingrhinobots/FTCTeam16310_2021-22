@@ -94,12 +94,16 @@ public class AutoBlueRight extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.9;
     static final double     TURN_SPEED              = 0.3;
-    static final double CLAW_OPEN_POS = 0.40;
-    static final double CLAW_CLOSE_POS = 0.20;
-    static final double CLAWREACH_MAX_POS = 0.10;
-    static final double CLAWREACH_PICK_POS = 0.25;
-    static final double CLAWREACH_PULLIN_P0S = 0.80;
-   // double position = 0.85;
+
+
+    static final double CLAW_OPEN_POS = 0.20;
+    static final double CLAW_CLOSE_POS = 0.01;
+    static final double CLAWREACH_MAX_POS = 0.05;
+    static final double CLAWREACH_PICK_POS = 0.29;
+    static final double CLAWREACH_PULLIN_P0S = 0.75;
+
+
+    // double position = 0.85;
     double ArmMovement;
     double ArmMovementTimeout;
     double CarouselPosition =0;
@@ -219,7 +223,7 @@ public class AutoBlueRight extends LinearOpMode {
         carouselTimer.reset();
         carouselTimer.startTime();
 
-        while(carouselTimer.seconds() <= 3) {
+        while(carouselTimer.seconds() <= 4) {
             CarouselPosition= 1;
             robot.CarouselServo.setPower(CarouselPosition);
         }
@@ -258,7 +262,7 @@ public class AutoBlueRight extends LinearOpMode {
 
         //baesd on the level adjust any driving forward movement
         if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            encoderDriveInLine(0.1,1.5,1.5,1.5,1.5,5);
+            encoderDriveInLine(0.1,2.5,2.5,2.5,2.5,5);
             robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
         } else if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
             encoderDriveInLine(0.2,2.5,2.5,2.5,2.5,5);
