@@ -154,8 +154,10 @@ public class AutoRedLeft extends LinearOpMode {
         telemetry.addData("Analysis", pipeline.getAnalysis());
         telemetry.update();*/
 
-        robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
         robot.ClawServo.setPosition(CLAW_CLOSE_POS);
+        sleep(200);
+        robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
+
 
 
         // Wait for the game to start (driver presses PLAY)
@@ -222,14 +224,10 @@ public class AutoRedLeft extends LinearOpMode {
         //straffe left towards the middle of the field to position to move towards alliance hub
         encoderDriveInLine(0.5,-30,30,30,-30,5);
 
-        //move towards the alliance hub
-        encoderDriveInLine(0.5,24,24,24,24,5);
-
-        sleep(500);
-
+        sleep(200);
 
         robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
-        sleep(500);
+        sleep(200);
         if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
             ArmMovement = ARMMOVEMENT_LOW;
             ArmMovementTimeout = 5;
@@ -244,11 +242,15 @@ public class AutoRedLeft extends LinearOpMode {
 
         //raise the arm according the duck position
         encoderDriveArmInLine(robot.ArmMotor, 0.1, -ArmMovement, ArmMovementTimeout);
-        sleep(2000);
+        sleep(200);
+
+        //move towards the alliance hub
+        encoderDriveInLine(0.5,24,24,24,24,5);
+
         //baesd on the level adjust any driving forward movement
         if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            encoderDriveInLine(0.1,3,3,3,3,5);
-            robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
+            encoderDriveInLine(0.1,3.2,3.2,3.2,3.2,5);
+            //robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
             encoderDriveInLine(0.2,3.5,3.5,3.5,3,5);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
@@ -262,7 +264,7 @@ public class AutoRedLeft extends LinearOpMode {
         //open out the claw to open position
       //  ClawReachPosition = 0.90;
        // robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
-        sleep(1500);
+        sleep(200);
 
         //open the claw up so that the frieght drops on the alliance hub
 
@@ -280,11 +282,15 @@ public class AutoRedLeft extends LinearOpMode {
 
         robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
 
-        robot.ClawServo.setPosition(CLAW_CLOSE_POS);
+        //robot.ClawServo.setPosition(CLAW_CLOSE_POS);
 
-      //strafe right towards the inside of the storage unit
-        encoderDriveInLine(0.2,12,-12,-12,12,2);
-        //baesd on the level adjust any driving forward movement
+        //strafe right towards the inside of the storage unit
+       // encoderDriveInLine(0.2,12,-12,-12,12,2);
+        //strafe right towards the inside of the storage unit
+        encoderDriveInLine(0.2,55,-55,-55,55,2);
+
+/*
+        //based on the level adjust any driving backword movement
         if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
             encoderDriveInLine(0.1,-1,-1,-1,-1,5);
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
@@ -293,7 +299,8 @@ public class AutoRedLeft extends LinearOpMode {
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
             encoderDriveInLine(0.2,-4,-4,-4,-4,5);
         }
-
+*/
+        encoderDriveInLine(0.6,120,120,120,120,5);
         encoderDriveArmInLine(robot.ArmMotor, 0.1, ArmMovement, 5);
 
         telemetry.addData("Path", "Complete");

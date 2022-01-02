@@ -215,7 +215,7 @@ public class AutoRedRight extends LinearOpMode {
 
         //baesd on the level adjust any driving forward movement
         if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            encoderDriveInLine(0.1,1.5,1.5,1.5,1.5,5);
+            encoderDriveInLine(0.1,2.5,2.5,2.5,2.5,5);
             robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
         } else if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
             encoderDriveInLine(0.2,2.5,2.5,2.5,2.5,5);

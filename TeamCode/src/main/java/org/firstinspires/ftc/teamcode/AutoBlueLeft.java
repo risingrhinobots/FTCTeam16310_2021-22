@@ -89,8 +89,8 @@ public class AutoBlueLeft extends LinearOpMode {
     /* Declare OpMode members. */
     HardwarePushbot_TC robot   = new HardwarePushbot_TC();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
-   // double position = 0.85;
     double ArmMovement;
+    //double position = 0.85;
     double ArmMovementTimeout;
     double CarouselPosition =0;
     double ClawReachPosition = CLAWREACH_PULLIN_P0S;
@@ -220,10 +220,10 @@ public class AutoBlueLeft extends LinearOpMode {
 
         //baesd on the level adjust any driving forward movement
         if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            encoderDriveInLine(0.1,1.5,1.5,1.5,1.5,5);
+            encoderDriveInLine(0.1,2.5,2.5,2.5,2.5,5);
             robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
         } else if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-            encoderDriveInLine(0.2,2.5,2.5,2.5,2.5,5);
+            encoderDriveInLine(0.2,3.5,3.5,3.5,3.5,5);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
             //move towards the alliance hub
         } else if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
@@ -260,7 +260,8 @@ public class AutoBlueLeft extends LinearOpMode {
         encoderDriveInLine(0.2,-4.25,4.25,4.25,-4.25,4);
 
         //move into warehouse
-        encoderDriveInLine(0.5,60,60,60,60,5);
+        encoderDriveInLine(0.5,74,74,74,74,8);
+
 
         encoderDriveArmInLine(robot.ArmMotor, 0.1,ArmMovement, ArmMovementTimeout);
 

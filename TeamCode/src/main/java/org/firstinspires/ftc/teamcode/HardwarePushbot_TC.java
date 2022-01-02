@@ -63,6 +63,7 @@ public class HardwarePushbot_TC
 
 
     public DcMotor ArmMotor = null;
+    public DcMotor ArmReach = null;
     public CRServo CarouselServo=null;
     public Servo ClawReachServo=null;
     public Servo   ClawServo=null;
@@ -106,6 +107,7 @@ public class HardwarePushbot_TC
         backLeft =  hwMap.get(DcMotorEx.class, "BackLeft");
         backRight = hwMap.get(DcMotorEx.class, "BackRight");
         ArmMotor = hwMap.get(DcMotorEx.class, "ArmMotor");
+        ArmReach = hwMap.get(DcMotorEx.class, "ArmReach");
         ClawServo = hwMap.get(Servo.class, "Claw");
         ClawReachServo = hwMap.get(Servo.class, "ClawReach");
         CarouselServo = hwMap.get(CRServo.class, "Carousel");
@@ -117,6 +119,7 @@ public class HardwarePushbot_TC
         backLeft.setDirection(DcMotorEx.Direction.REVERSE);
         backRight.setDirection(DcMotorEx.Direction.FORWARD);
         ArmMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        ArmReach.setDirection(DcMotorEx.Direction.REVERSE);
 
 
 
@@ -125,13 +128,15 @@ public class HardwarePushbot_TC
         backLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         ArmMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-
+        ArmReach.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         // Set all motors to zero power
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
+        ArmMotor.setPower(0);
+        ArmReach.setPower(0);
 
 
         // Set all motors to run without encoders.
@@ -141,6 +146,7 @@ public class HardwarePushbot_TC
         backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         ArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        ArmReach.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
 
