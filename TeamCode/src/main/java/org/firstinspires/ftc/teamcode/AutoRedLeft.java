@@ -115,6 +115,7 @@ public class AutoRedLeft extends LinearOpMode {
 
     OpenCvWebcam webcam;
     InLineDuckPosDeterminationPipeline pipeline;
+    EncoderDrive encoderDrive = new EncoderDrive();
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -206,7 +207,7 @@ public class AutoRedLeft extends LinearOpMode {
         //straffe towards the inside of the field before moving to the carousel
         encoderDriveInLine(0.2,-5,5,5,-5,2);
         //position arm for delivery based on duck position
-
+        encoderDrive.encoderDrive(robot,0.2,-5,5,5,-5,2);
         //Drive backword to the carousel
         encoderDriveInLine(0.3,-20.5,-20.5,-20.5,-20.5,2);
 
