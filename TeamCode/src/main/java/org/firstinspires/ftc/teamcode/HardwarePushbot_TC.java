@@ -69,6 +69,22 @@ public class HardwarePushbot_TC
     public Servo   ClawServo=null;
 
 
+    static final double     COUNTS_PER_MOTOR_REV    = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1 ;   // 1  // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_SPEED             = 0.9;
+    static final double     TURN_SPEED              = 0.3;
+    static final double CLAW_OPEN_POS = 0.35;
+    static final double CLAW_CLOSE_POS = 0.22;
+    static final double CLAWREACH_MAX_POS = 0.05;
+    static final double CLAWREACH_PICK_POS = 0.25;
+    static final double CLAWREACH_PULLIN_P0S = 0.80;
+    static final double ARMMOVEMENT_LOW = 2.6;
+    static final double ARMMOVEMENT_MID = 5.5;
+    static final double ARMMOVEMENT_HIGH = 7.5;
+    static final double distance = 3.75;
 
 
     /* local OpMode members. */
@@ -131,6 +147,7 @@ public class HardwarePushbot_TC
         backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         ArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         ArmReach.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
 
 

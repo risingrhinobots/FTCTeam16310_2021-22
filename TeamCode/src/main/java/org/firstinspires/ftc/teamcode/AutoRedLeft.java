@@ -29,16 +29,20 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.*;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import android.provider.Telephony;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.DuckPosDetermination.*;
 import org.firstinspires.ftc.teamcode.HardwarePushbot_TC;
 import org.opencv.core.Core;
@@ -88,27 +92,11 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Autonomous(name="Pushbot: RedLeftAuto", group="FreightFrenzy")
 //@Disabled
 public class AutoRedLeft extends LinearOpMode {
+    private DistanceSensor sensorRange;
 
     /* Declare OpMode members. */
     HardwarePushbot_TC robot   = new HardwarePushbot_TC();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
-    static final double     COUNTS_PER_MOTOR_REV    = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1 ;   // 1  // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.9;
-    static final double     TURN_SPEED              = 0.3;
-
-
-
-
-    static final double CLAW_OPEN_POS = 0.20;
-    static final double CLAW_CLOSE_POS = 0.01;
-    static final double CLAWREACH_MAX_POS = 0.05;
-    static final double CLAWREACH_PICK_POS = 0.29;
-    static final double CLAWREACH_PULLIN_P0S = 0.75;
-
     double ArmMovement;
     double ArmMovementTimeout;
     double CarouselPosition;
@@ -129,6 +117,8 @@ public class AutoRedLeft extends LinearOpMode {
         pipeline = new InLineDuckPosDeterminationPipeline();
         webcam.setPipeline(pipeline);
         webcam.setMillisecondsPermissionTimeout(2500);
+        sensorRange = hardwareMap.get(DistanceSensor .class, "DistanceSensor");
+        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
@@ -157,8 +147,6 @@ public class AutoRedLeft extends LinearOpMode {
         robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
         // Send telemetry message to indicate successful Encoder reset
     /*    telemetry.addData("Path0",  "Starting at %7d :%7d",
                 robot.frontLeft.getCurrentPosition(),
@@ -208,9 +196,10 @@ public class AutoRedLeft extends LinearOpMode {
         encoderDriveInLine(0.2,-5,5,5,-5,2);
         //position arm for delivery based on duck position
         encoderDrive.encoderDrive(robot,0.2,-5,5,5,-5,2);
-        //Drive backword to the carousel
-        encoderDriveInLine(0.3,-20.5,-20.5,-20.5,-20.5,2);
-
+        //Drive backward to the carousel
+        while(sensorRange.getDistance(DistanceUnit.INCH) >= distance){
+            drive(0.4);
+        }
 
         ElapsedTime carouselTimer = new ElapsedTime();
         carouselTimer.reset();
@@ -240,14 +229,14 @@ public class AutoRedLeft extends LinearOpMode {
         robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
         sleep(200);
         if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            ArmMovement = 2.6;
+            ArmMovement = ARMMOVEMENT_LOW;
             ArmMovementTimeout = 5;
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-            ArmMovement = 4.5;
+            ArmMovement = ARMMOVEMENT_MID;
             ArmMovementTimeout = 7;
             //move towards the alliance hub
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
-            ArmMovement = 7.5;
+            ArmMovement = ARMMOVEMENT_HIGH;
             ArmMovementTimeout = 9;
         }
 
@@ -397,7 +386,12 @@ public class AutoRedLeft extends LinearOpMode {
         }
     }
 
-
+    public void drive(double speed){
+        robot.frontLeft.setPower(-speed);
+        robot.frontRight.setPower(-speed);
+        robot.backLeft.setPower(-speed);
+        robot.backRight.setPower(-speed);
+    }
     public void encoderDriveArmInLine(DcMotor ArmMotor, double speed, double armmovement, double timeoutS) {
         int newArmTarget;
 
