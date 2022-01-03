@@ -161,6 +161,11 @@ public class AutoRedLeft extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        
+        //so stop() actually works
+        if(isStopRequested()){
+            return;
+        }
 
         //  pipeline = new DuckPositionDetermination();
         while (opModeIsActive()) {
