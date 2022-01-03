@@ -152,8 +152,11 @@ public class AutoBlueRight extends LinearOpMode {
         telemetry.addData("Analysis", pipeline.getAnalysis());
         telemetry.update();*/
 
-        robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
         robot.ClawServo.setPosition(CLAW_CLOSE_POS);
+        sleep(500);
+        robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
+
+
 
         // Stop all motion;
         robot.frontLeft.setPower(0);
@@ -201,9 +204,10 @@ public class AutoBlueRight extends LinearOpMode {
         encoderDriveInLine(0.3,-19.0,19.0,-19.0,19.0,5);
 
         //Strafe right to the carousel
-        while(sensorRange.getDistance(DistanceUnit.INCH) >= distance){
-            drive(0.4);
-        }
+        encoderDriveInLine(0.4,22.9,-22.9,-22.9,22.9,5);
+        sleep(300);
+        //Slowly straffe right to the carousel
+        encoderDriveInLine(0.1,3,-3,-3,3,5);
         //CAROUSEL TIME
         ElapsedTime carouselTimer = new ElapsedTime();
         carouselTimer.reset();
@@ -249,10 +253,10 @@ public class AutoBlueRight extends LinearOpMode {
         //baesd on the level adjust any driving forward movement
         if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
             encoderDriveInLine(0.1,2.5,2.5,2.5,2.5,5);
-            robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
+            //robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
         } else if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
             encoderDriveInLine(0.2,2.5,2.5,2.5,2.5,5);
-            robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
+           // robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
         } else if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
             encoderDriveInLine(0.2,4.5,4.5,4.5,4.5,5);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);

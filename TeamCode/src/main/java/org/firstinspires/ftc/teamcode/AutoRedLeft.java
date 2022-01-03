@@ -155,9 +155,8 @@ public class AutoRedLeft extends LinearOpMode {
         telemetry.update();*/
 
         robot.ClawServo.setPosition(CLAW_CLOSE_POS);
-        sleep(200);
+        sleep(500);
         robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
-
 
 
         // Wait for the game to start (driver presses PLAY)
@@ -195,11 +194,12 @@ public class AutoRedLeft extends LinearOpMode {
         //straffe towards the inside of the field before moving to the carousel
         encoderDriveInLine(0.2,-5,5,5,-5,2);
         //position arm for delivery based on duck position
-        encoderDrive.encoderDrive(robot,0.2,-5,5,5,-5,2);
+      //  encoderDrive.encoderDrive(robot,0.2,-5,5,5,-5,2);
         //Drive backward to the carousel
-        while(sensorRange.getDistance(DistanceUnit.INCH) >= distance){
+        encoderDriveInLine(0.4,-19,-19,-19,-19,9);
+/*        while(sensorRange.getDistance(DistanceUnit.INCH) >= distance){
             drive(0.4);
-        }
+        }*/
 
         ElapsedTime carouselTimer = new ElapsedTime();
         carouselTimer.reset();
@@ -253,7 +253,7 @@ public class AutoRedLeft extends LinearOpMode {
             //robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
             encoderDriveInLine(0.2,3.5,3.5,3.5,3,5);
-            robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
+            //robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
             //move towards the alliance hub
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
             encoderDriveInLine(0.2,7,7,7,7,5);
@@ -287,7 +287,7 @@ public class AutoRedLeft extends LinearOpMode {
         //strafe right towards the inside of the storage unit
        // encoderDriveInLine(0.2,12,-12,-12,12,2);
         //strafe right towards the inside of the storage unit
-        encoderDriveInLine(0.2,55,-55,-55,55,2);
+        encoderDriveInLine(0.2,58,-58,-58,58,2);
 
 /*
         //based on the level adjust any driving backword movement
