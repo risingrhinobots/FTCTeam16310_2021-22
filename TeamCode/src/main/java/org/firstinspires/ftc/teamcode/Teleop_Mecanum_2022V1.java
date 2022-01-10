@@ -49,15 +49,19 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.*;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 /**
@@ -89,6 +93,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     private DcMotor ArmReach = null;
     private Servo ClawServo = null;
     private Servo ClawReachServo = null;
+    private DistanceSensor sensorRange;
     static final double COUNTS_PER_MOTOR_REV = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 1;   // 1  // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_INCHES = 4;     // For figuring circumference
@@ -100,7 +105,11 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     double  ArmSwiwelPosition = 0; // Start at halfway position
     boolean rampUp = true;
     static final double CLAWREACH_PULLIN_P0S = 0.80;
-    double driveboost= 0.7;
+    static final double CLAWREACH_PICK_POS = 0.28;
+    static final double CLAW_OPEN_POS = 0.20;
+    static final double CLAW_CLOSE_POS = 0.0;
+    static final double CLAWREACH_MAX_POS = 0.1;
+    double driveboost= 0.65;
     double turnboost =0.6;
     double strafeboost = 0.6;
     // Define class members
@@ -129,6 +138,14 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
         ClawServo = hardwareMap.get(Servo.class, "Claw");
         ClawReachServo = hardwareMap.get(Servo.class, "ClawReach");
         CarouselServo = hardwareMap.get(CRServo.class, "Carousel");
+
+        // you can use this as a regular DistanceSensor.
+        sensorRange = hardwareMap.get(DistanceSensor.class, "Sensor_Range");
+
+        // you can also cast this to a Rev2mDistanceSensor if you want to use added
+        // methods associated with the Rev2mDistanceSensor class.
+        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
+
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -160,6 +177,11 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
         telemetry.addData("Arm Motor Get current Position", ArmMotor.getCurrentPosition());
         telemetry.addData("FL Get current Position", FrontLeftDrive.getCurrentPosition());
         telemetry.addData("FR Get current Position", FrontRightDrive.getCurrentPosition());
+        telemetry.addData("deviceName",sensorRange.getDeviceName() );
+        telemetry.addData("range", String.format("%.01f mm", sensorRange.getDistance(DistanceUnit.MM)));
+        telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
+        telemetry.addData("range", String.format("%.01f m", sensorRange.getDistance(DistanceUnit.METER)));
+        telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
         telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -175,13 +197,18 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             double BackRightPower;
             double ArmPower;
 
+
             double drive= 0;
             double turn =0;
             double strafe = 0;
 
+
             drive = driveboost *  (-gamepad1.left_stick_y);
             turn  = turnboost * (gamepad1.left_stick_x);
             strafe = strafeboost * (gamepad1.right_stick_x);
+
+
+
 
 
             // Choose to drive using either Tank Mode, or POV Mode
@@ -194,6 +221,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             BackRightPower   = Range.clip(drive + turn - strafe, -1, 1) /denominator;
 
 
+
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
             // leftPower  = -gamepad1.left_stick_y ;
@@ -204,8 +232,13 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             FrontRightDrive.setPower(FrontRightPower);
             BackLeftDrive.setPower(BackLeftPower);
             BackRightDrive.setPower(BackRightPower);
-
-
+/*
+            if (sensorRange.getDistance(DistanceUnit.METER) <=0.7 ) {
+                // Keep stepping up until we hit the max value.
+                position = 0; //rotate right
+                CarouselServo.setPower(position);
+            }
+*/
             //Claw is open position
             if (gamepad1.a) {
                 position = CLAW_OPEN_POS;
@@ -233,33 +266,9 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
 
             }
 
-            if (gamepad1.dpad_left) {
-
-                InLineEncoderDriveArmR(ArmReach, 0.2, -2, 2, ArmReachStartingPosition);
-            }
-            if (gamepad1.dpad_right) {
-
-                InLineEncoderDriveArmR(ArmReach, 0.2, 2, 2, ArmReachStartingPosition);
-
-            }
-
-            if (gamepad1.dpad_down) {
-                InLineEncoderDriveArm(ArmMotor, 0.2, 2, 2);
-            }
-
-            if (gamepad1.dpad_up) {
-                InLineEncoderDriveArm(ArmMotor, 0.2, -2, 2);
-            }
 
 
-            if (gamepad1.left_bumper) {
-               // encoderDriveInLine(0.8,25,25,25,25,2);
-                ArmMotor.setPower(0);
-                ArmReach.setPower(0);
-            }
-            else if (gamepad1.right_bumper) {
-               // encoderDriveInLine(0.8,-25,-25,-25,-25,2);
-            }
+
 
 
             // Display the current value
@@ -267,14 +276,14 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
          //   telemetry.addData(">", "Press Stop to end test.");
          //   telemetry.update();
             // y on gamepad 2 is the capping position
-            /*
+
             if (gamepad2.y) {
                 // Capping arm position
-                InLineEncoderDriveArm(ArmMotor, 0.2, -12, 8);
+                InLineEncoderDriveArm(ArmMotor, 0.2, -9, 5);
                 ClawReachPosition = CLAWREACH_MAX_POS;
                 ClawReachServo.setPosition(ClawReachPosition);
 
-            }*/
+            }
 
             if (gamepad2.x) {
                 // Keep stepping up until we hit the max value.
@@ -286,7 +295,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 // Keep stepping up until we hit the max value.
                 position = -1; //stop
                 CarouselServo.setPower(position);
-            }
+             }
 
             if (gamepad2.b) {
                 // Keep stepping up until we hit the max value.
@@ -294,11 +303,25 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 CarouselServo.setPower(position);
 
             }
+
             if (gamepad2.dpad_up) {
-                InLineEncoderDriveArm(ArmMotor, 0.2, -2, 5);
+                InLineEncoderDriveArm(ArmMotor, 0.25, -1.5, 5);
             }
             if (gamepad2.dpad_down) {
-                InLineEncoderDriveArm(ArmMotor, 0.2, 2, 5);
+                InLineEncoderDriveArm(ArmMotor, 0.25, 1.5, 5);
+            }
+
+            //position ARM for capping
+            if (gamepad1.left_bumper) {
+
+                position = CLAW_OPEN_POS+1.5;
+                ClawServo.setPosition(position);
+            }
+            //position ARM for capping
+            if (gamepad1.right_bumper) {
+
+                position = CLAW_CLOSE_POS;
+                ClawServo.setPosition(position);
             }
             //position ARM for capping
             if (gamepad2.left_bumper) {

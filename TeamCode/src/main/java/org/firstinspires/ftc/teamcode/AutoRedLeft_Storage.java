@@ -29,13 +29,19 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.*;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.ARMMOVEMENT_HIGH;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.ARMMOVEMENT_LOW;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.ARMMOVEMENT_MID;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.CLAWREACH_MAX_POS;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.CLAWREACH_PICK_POS;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.CLAWREACH_PULLIN_P0S;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.CLAW_CLOSE_POS;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.CLAW_OPEN_POS;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.COUNTS_PER_INCH;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -84,23 +90,23 @@ import org.openftc.easyopencv.OpenCvWebcam;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: BlueRightAuto", group="FreightFrenzy")
+@Autonomous(name="Pushbot: RedLeftAuto_Storage", group="FreightFrenzy")
 //@Disabled
-public class AutoBlueRight extends LinearOpMode {
-    //private DistanceSensor sensorRange;
+public class AutoRedLeft_Storage extends LinearOpMode {
+   // private DistanceSensor sensorRange;
+
     /* Declare OpMode members. */
     HardwarePushbot_TC robot   = new HardwarePushbot_TC();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
-   // double position = 0.85;
     double ArmMovement;
     double ArmMovementTimeout;
-    double CarouselPosition =0;
-    double ClawReachPosition = CLAWREACH_PULLIN_P0S;
+    double CarouselPosition;
+
     OpenCvWebcam webcam;
     InLineDuckPosDeterminationPipeline pipeline;
+    EncoderDrive encoderDrive = new EncoderDrive();
     @Override
-
-   public void runOpMode() throws InterruptedException {
+    public void runOpMode() throws InterruptedException {
 
         /*
          * Initialize the drive system variables.
@@ -112,8 +118,8 @@ public class AutoBlueRight extends LinearOpMode {
         pipeline = new InLineDuckPosDeterminationPipeline();
         webcam.setPipeline(pipeline);
         webcam.setMillisecondsPermissionTimeout(2500);
-        //sensorRange = hardwareMap.get(DistanceSensor.class, "DistanceSensor");
-       // Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
+       // sensorRange = hardwareMap.get(DistanceSensor .class, "DistanceSensor");
+        //Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
@@ -127,26 +133,23 @@ public class AutoBlueRight extends LinearOpMode {
         });
 
         telemetry.addData("Analysis", pipeline.getAnalysis());
-   //     telemetry.update();
-
+       // telemetry.update();
+        telemetry.addData("Running Program", "Red Left");
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Running Program", "Blue Right");
-        telemetry.addData("Status", "Resetting Encoders and Setting up webcam pipeline");
+        telemetry.addData("Status", "Resetting Encoders and Setting up webcam pipeline");    //
         telemetry.update();
-/*
-        robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+       /* robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-*/
+        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);*/
+
         robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
         // Send telemetry message to indicate successful Encoder reset
-      /*  telemetry.addData("Path0",  "Starting at %7d :%7d",
+    /*    telemetry.addData("Path0",  "Starting at %7d :%7d",
                 robot.frontLeft.getCurrentPosition(),
                 robot.frontRight.getCurrentPosition());
         telemetry.addData("Analysis", pipeline.getAnalysis());
@@ -157,22 +160,14 @@ public class AutoBlueRight extends LinearOpMode {
         robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
 
 
-
-        // Stop all motion;
-        robot.frontLeft.setPower(0);
-        robot.frontRight.setPower(0);
-        robot.backLeft.setPower(0);
-        robot.backRight.setPower(0);
-
-        sleep(2000);
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         //  pipeline = new DuckPositionDetermination();
-/*
         while (opModeIsActive()) {
-
+            /*
+             * Send some stats to the telemetry
+             */
             telemetry.addData("Frame Count", webcam.getFrameCount());
             telemetry.addData("FPS", String.format("%.2f", webcam.getFps()));
             telemetry.addData("Total frame time ms", webcam.getTotalFrameTimeMs());
@@ -185,7 +180,7 @@ public class AutoBlueRight extends LinearOpMode {
             break;
 
         }
-*/
+
         InLineDuckPosDeterminationPipeline.DuckPositionInLine position1;
         {
             position1 = InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT;
@@ -196,25 +191,23 @@ public class AutoBlueRight extends LinearOpMode {
         // FORWARD DRIVE SAMPLE. reverse drive will be all negative values
         robot.ArmMotor.setDirection(DcMotor.Direction.REVERSE);
 
+
         //straffe towards the inside of the field before moving to the carousel
-        encoderDriveInLine(0.2,-8.0,8.0,8.0,-8.0,4);
+        encoderDriveInLine(0.2,-5,5,5,-5,2);
         //position arm for delivery based on duck position
+      //  encoderDrive.encoderDrive(robot,0.2,-5,5,5,-5,2);
+        //Drive backward to the carousel
+        encoderDriveInLine(0.4,-19,-19,-19,-19,9);
+/*        while(sensorRange.getDistance(DistanceUnit.INCH) >= distance){
+            drive(0.4);
+        }*/
 
-        //turn left 90 degrees
-        encoderDriveInLine(0.3,-19.0,19.0,-19.0,19.0,5);
-
-        //Strafe right to the carousel
-        encoderDriveInLine(0.4,22.9,-22.9,-22.9,22.9,5);
-        sleep(300);
-        //Slowly straffe right to the carousel
-        encoderDriveInLine(0.1,4,-4,-4,4,5);
-        //CAROUSEL TIME
         ElapsedTime carouselTimer = new ElapsedTime();
         carouselTimer.reset();
         carouselTimer.startTime();
 
         while(carouselTimer.seconds() <= 4) {
-            CarouselPosition= 1;
+            CarouselPosition=-1;
             robot.CarouselServo.setPower(CarouselPosition);
         }
 
@@ -222,79 +215,99 @@ public class AutoBlueRight extends LinearOpMode {
         CarouselPosition=0;
         robot.CarouselServo.setPower(CarouselPosition);
 
-        //move forward to align with the shipping hub
-        encoderDriveInLine(0.5,36,36,36,36,20);
+        //straffe left towards the middle of the field to position to move towards alliance hub
+        encoderDriveInLine(0.5,-10,10,10,-10,5);
 
-        //turn left towards the shipping hub
-        encoderDriveInLine(0.3,-19,19,-19,19,5);
-        robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
-        if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            ArmMovement = ARMMOVEMENT_LOW;
-            ArmMovementTimeout = 5;
-            telemetry.addData("Duck position", "Left");
-        } else if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-            ArmMovement = ARMMOVEMENT_MID;
-            ArmMovementTimeout = 7;
-            telemetry.addData("Duck position", "Middle");
-            //move towards the alliance hub
-        } else if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
-            ArmMovement = ARMMOVEMENT_HIGH;
-            ArmMovementTimeout = 9;
-            telemetry.addData("Duck position", "Right");
-        }
-        telemetry.update();
-        //raise the arm according the duck position
-        encoderDriveArmInLine(robot.ArmMotor, 0.1, -ArmMovement, ArmMovementTimeout);
+        // move back a little bit more
+        encoderDriveInLine(0.5,-5,-5,-5,-5,5);
 
-        //move towards the alliance hub
-        encoderDriveInLine(0.5,23,23,23,23,5);
+
+        //straffe left towards the middle of the field to position to move towards alliance hub
+        encoderDriveInLine(0.5,-30,30,30,-30,5);
+
         sleep(200);
 
+        robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
+        sleep(200);
+        if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
+            ArmMovement = ARMMOVEMENT_LOW;
+            ArmMovementTimeout = 5;
+        } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
+            ArmMovement = ARMMOVEMENT_MID;
+            ArmMovementTimeout = 7;
+            //move towards the alliance hub
+        } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
+            ArmMovement = ARMMOVEMENT_HIGH;
+            ArmMovementTimeout = 9;
+        }
+
+        //raise the arm according the duck position
+        encoderDriveArmInLine(robot.ArmMotor, 0.1, -ArmMovement, ArmMovementTimeout);
+        sleep(200);
+
+        //move towards the alliance hub
+        encoderDriveInLine(0.5,24,24,24,24,5);
+
         //baesd on the level adjust any driving forward movement
-        if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            encoderDriveInLine(0.1,2.5,2.5,2.5,2.5,5);
+        if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
+            encoderDriveInLine(0.1,3.2,3.2,3.2,3.2,5);
             //robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
-        } else if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-            encoderDriveInLine(0.2,2.5,2.5,2.5,2.5,5);
-           // robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
-        } else if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
-            encoderDriveInLine(0.2,4.5,4.5,4.5,4.5,5);
+        } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
+            encoderDriveInLine(0.2,3.5,3.5,3.5,3,5);
+            //robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
+            //move towards the alliance hub
+        } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
+            encoderDriveInLine(0.2,7,7,7,7,5);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
         }
-        sleep(300);
+
+
+        //open out the claw to open position
+      //  ClawReachPosition = 0.90;
+       // robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
+        sleep(200);
 
         //open the claw up so that the frieght drops on the alliance hub
+
         robot.ClawServo.setPosition(CLAW_OPEN_POS);
 
-        sleep(300);
-        //move back towards the wall
-        encoderDriveInLine(0.5,-32,-32,-32,-32,10);
-
-
+        sleep(500);
         //close the claw and pull back the claw reach servo
+
+        //move back towards the storage unit
+        encoderDriveInLine(0.5,-30,-30,-30,-30,5);
+
+
         robot.ClawServo.setPosition(CLAW_CLOSE_POS);
         sleep(500);
 
         robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
 
-        //straffe left towards the storage unit
-        encoderDriveInLine(0.3,-17.5,17.5,17.5,-17.5,9);
+        //robot.ClawServo.setPosition(CLAW_CLOSE_POS);
 
+        //strafe right towards the inside of the storage unit
+       // encoderDriveInLine(0.2,12,-12,-12,12,2);
+        //strafe right towards the inside of the storage unit
+        encoderDriveInLine(0.2,58,-58,-58,58,2);
 
-
-
-        sleep(100);
-        encoderDriveArmInLine(robot.ArmMotor, 0.1, ArmMovement, ArmMovementTimeout);
-
-        sleep(2000);
-
-
+/*
+        //based on the level adjust any driving backword movement
+        if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
+            encoderDriveInLine(0.1,-1,-1,-1,-1,5);
+        } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
+            encoderDriveInLine(0.2,-2,-2,-2,-2,5);
+            //move towards the alliance hub
+        } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
+            encoderDriveInLine(0.2,-4,-4,-4,-4,5);
+        }
+*/
+        encoderDriveInLine(0.6,-20,-20,-20,-20,5);
+      //  encoderDriveInLine(0.6,120,120,120,120,5);
+        encoderDriveArmInLine(robot.ArmMotor, 0.1, ArmMovement, 5);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
-
-
 
 
     /*
@@ -374,14 +387,13 @@ public class AutoBlueRight extends LinearOpMode {
             sleep(250);   // optional pause after each move
         }
     }
+
     public void drive(double speed){
-        // for reference: encoderDriveInLine(0.4,22.9,-22.9,-22.9,22.9,5);
-        robot.frontLeft.setPower(speed);
+        robot.frontLeft.setPower(-speed);
         robot.frontRight.setPower(-speed);
         robot.backLeft.setPower(-speed);
-        robot.backRight.setPower(speed);
+        robot.backRight.setPower(-speed);
     }
-
     public void encoderDriveArmInLine(DcMotor ArmMotor, double speed, double armmovement, double timeoutS) {
         int newArmTarget;
 

@@ -92,7 +92,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Autonomous(name="Pushbot: RedLeftAuto", group="FreightFrenzy")
 //@Disabled
 public class AutoRedLeft extends LinearOpMode {
-    private DistanceSensor sensorRange;
+   // private DistanceSensor sensorRange;
 
     /* Declare OpMode members. */
     HardwarePushbot_TC robot   = new HardwarePushbot_TC();   // Use a Pushbot's hardware
@@ -117,8 +117,8 @@ public class AutoRedLeft extends LinearOpMode {
         pipeline = new InLineDuckPosDeterminationPipeline();
         webcam.setPipeline(pipeline);
         webcam.setMillisecondsPermissionTimeout(2500);
-        sensorRange = hardwareMap.get(DistanceSensor .class, "DistanceSensor");
-        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
+       // sensorRange = hardwareMap.get(DistanceSensor .class, "DistanceSensor");
+        //Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {

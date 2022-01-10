@@ -210,7 +210,7 @@ public class AutoRedRight extends LinearOpMode {
         sleep(500);
 
         //move towards the alliance hub
-        encoderDriveInLine(0.5,13.5,13.5,13.5,13.5,5);
+        encoderDriveInLine(0.5,14.5,14.5,14.5,14.5,5);
 
 
         //baesd on the level adjust any driving forward movement

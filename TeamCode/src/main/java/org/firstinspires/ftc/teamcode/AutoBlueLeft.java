@@ -186,7 +186,7 @@ public class AutoBlueLeft extends LinearOpMode {
         encoderDriveInLine(0.2,-4,4,4,-4,4);
 
         //Drive forward to align with the alliance hub before turning
-        encoderDriveInLine(0.3,22,22,22,22,2);
+        encoderDriveInLine(0.3,24,24,24,24,2);
 
         //turn left towards the alliance hub
         encoderDriveInLine(0.5,-19,19,-19,19,5);
@@ -214,7 +214,7 @@ public class AutoBlueLeft extends LinearOpMode {
         encoderDriveArmInLine(robot.ArmMotor, 0.1, -ArmMovement, ArmMovementTimeout);
 
         //move towards the alliance hub
-        encoderDriveInLine(0.5,13.5,13.5,13.5,13.5,5);
+        encoderDriveInLine(0.5,14.5,14.5,14.5,14.5,5);
 
         sleep(500);
 
