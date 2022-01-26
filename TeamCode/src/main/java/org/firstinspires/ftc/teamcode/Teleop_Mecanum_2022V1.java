@@ -89,6 +89,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     private DcMotor BackLeftDrive = null;
     private DcMotor BackRightDrive = null;
     private CRServo CarouselServo = null;
+    private CRServo CarouselBlueServo = null;
     private DcMotor ArmMotor = null;
     private DcMotor ArmReach = null;
     private Servo ClawServo = null;
@@ -99,9 +100,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = 4;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-  //  static final double DRIVE_SPEED = 0.3;
-  //  static final double INCREMENT = 0.005;     // amount to slew servo each CYCLE_MS cycle
-  //  static final int CYCLE_MS = 1000;     // period of each cycle
+
     double  ArmSwiwelPosition = 0; // Start at halfway position
     boolean rampUp = true;
     static final double CLAWREACH_PULLIN_P0S = 0.80;
@@ -109,9 +108,10 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     static final double CLAW_OPEN_POS = 0.20;
     static final double CLAW_CLOSE_POS = 0.0;
     static final double CLAWREACH_MAX_POS = 0.1;
-    double driveboost= 0.65;
+    double driveboost= 0.75;
     double turnboost =0.6;
-    double strafeboost = 0.6;
+    double strafeboost = 0.7;
+    double ArmStartingPosition;
     // Define class members
 
     double position = 0.25;  //claw to be closed
@@ -138,7 +138,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
         ClawServo = hardwareMap.get(Servo.class, "Claw");
         ClawReachServo = hardwareMap.get(Servo.class, "ClawReach");
         CarouselServo = hardwareMap.get(CRServo.class, "Carousel");
-
+        CarouselBlueServo = hardwareMap.get(CRServo.class, "CarouselBlue");
         // you can use this as a regular DistanceSensor.
         sensorRange = hardwareMap.get(DistanceSensor.class, "Sensor_Range");
 
@@ -167,8 +167,8 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
         ArmReach.setPower(0);
 
 
-        ClawReachServo.setPosition(ClawReachPosition);
-        ClawServo.setPosition(CLAW_CLOSE_POS);
+        //ClawReachServo.setPosition(ClawReachPosition);
+        //ClawServo.setPosition(CLAW_CLOSE_POS);
         double ArmReachStartingPosition = ArmReach.getCurrentPosition();
 
         telemetry.addData("Status", "Initialized");
@@ -183,6 +183,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
         telemetry.addData("range", String.format("%.01f m", sensorRange.getDistance(DistanceUnit.METER)));
         telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
         telemetry.update();
+        ArmStartingPosition = ArmMotor.getCurrentPosition();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -220,18 +221,13 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             FrontRightPower   = Range.clip(drive - turn - strafe, -1, 1)/denominator ;
             BackRightPower   = Range.clip(drive + turn - strafe, -1, 1) /denominator;
 
-
-
-            // Tank Mode uses one stick to control each wheel.
-            // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            // leftPower  = -gamepad1.left_stick_y ;
-            // rightPower = -gamepad1.right_stick_y ;
-
             // Send calculated power to wheels
             FrontLeftDrive.setPower(FrontLeftPower);
             FrontRightDrive.setPower(FrontRightPower);
             BackLeftDrive.setPower(BackLeftPower);
             BackRightDrive.setPower(BackRightPower);
+
+
 /*
             if (sensorRange.getDistance(DistanceUnit.METER) <=0.7 ) {
                 // Keep stepping up until we hit the max value.
@@ -267,19 +263,9 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             }
 
 
-
-
-
-
-            // Display the current value
-          //  telemetry.addData("Servo Position", "%5.2f", ClawReachPosition);
-         //   telemetry.addData(">", "Press Stop to end test.");
-         //   telemetry.update();
-            // y on gamepad 2 is the capping position
-
             if (gamepad2.y) {
                 // Capping arm position
-                InLineEncoderDriveArm(ArmMotor, 0.2, -9, 5);
+                InLineEncoderDriveArm(ArmMotor, 0.2, -16, 5);
                 ClawReachPosition = CLAWREACH_MAX_POS;
                 ClawReachServo.setPosition(ClawReachPosition);
 
@@ -289,6 +275,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 // Keep stepping up until we hit the max value.
                 position = 0; //rotate right
                 CarouselServo.setPower(position);
+                CarouselBlueServo.setPower(position);
             }
             // slew the servo, according to the rampUp (direction) variable.
             if (gamepad2.a) {
@@ -300,15 +287,15 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             if (gamepad2.b) {
                 // Keep stepping up until we hit the max value.
                 position = 1; //rotate right
-                CarouselServo.setPower(position);
+                CarouselBlueServo.setPower(position);
 
             }
 
             if (gamepad2.dpad_up) {
-                InLineEncoderDriveArm(ArmMotor, 0.25, -1.5, 5);
+                InLineEncoderDriveArm(ArmMotor, 0.3, -3, 7);
             }
             if (gamepad2.dpad_down) {
-                InLineEncoderDriveArm(ArmMotor, 0.25, 1.5, 5);
+                InLineEncoderDriveArm(ArmMotor, 0.3, 3, 7);
             }
 
             //position ARM for capping
@@ -320,8 +307,11 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             //position ARM for capping
             if (gamepad1.right_bumper) {
 
-                position = CLAW_CLOSE_POS;
-                ClawServo.setPosition(position);
+               //position = CLAW_CLOSE_POS;
+                //ClawServo.setPosition(position);
+                ArmMotor.setPower(Math.abs(0.2));
+                ArmMotor.setTargetPosition((int) ArmStartingPosition);
+                ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
             //position ARM for capping
             if (gamepad2.left_bumper) {
@@ -413,7 +403,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 //sleep(5000);
             }
 
-            sleep(250);   // optional pause after each move
+            sleep(1);   // optional pause after each move
 
         }
     }

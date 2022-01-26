@@ -217,11 +217,16 @@ public class AutoBlueLeft extends LinearOpMode {
         encoderDriveArmInLine(robot.ArmMotor, 0.1, -ArmMovement, ArmMovementTimeout);
 
         //move towards the alliance hub
-        encoderDriveInLine(0.5,14.5,14.5,14.5,14.5,5);
-
+        if(position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT){
+            encoderDriveInLine(0.5,18.5,18.5,18.5,18.5,5);
+            robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
+        }
+        else {
+            encoderDriveInLine(0.5, 16.0, 16.0, 16.0, 16.0, 5);
+        }
         sleep(500);
 
-        //baesd on the level adjust any driving forward movement
+        /*baesd on the level adjust any driving forward movement
         if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
             encoderDriveInLine(0.1,2.5,2.5,2.5,2.5,5);
             robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
@@ -232,7 +237,7 @@ public class AutoBlueLeft extends LinearOpMode {
         } else if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
             encoderDriveInLine(0.2,4.5,4.5,4.5,4.5,5);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
-        }
+        }*/
 
 
         sleep(300);

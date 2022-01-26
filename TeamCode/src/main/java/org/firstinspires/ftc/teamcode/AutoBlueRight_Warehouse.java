@@ -31,6 +31,7 @@ import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.*;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -83,7 +84,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
  */
 
 @Autonomous(name="Pushbot: BlueRightAuto_Warehouse", group="FreightFrenzy")
-//@Disabled
+@Disabled
 public class AutoBlueRight_Warehouse extends LinearOpMode {
     //private DistanceSensor sensorRange;
     /* Declare OpMode members. */

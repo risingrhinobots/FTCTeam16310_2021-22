@@ -29,23 +29,22 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.ARMMOVEMENT_HIGH;
-import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.ARMMOVEMENT_LOW;
-import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.ARMMOVEMENT_MID;
-import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.CLAWREACH_MAX_POS;
-import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.CLAWREACH_PICK_POS;
-import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.CLAWREACH_PULLIN_P0S;
-import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.CLAW_CLOSE_POS;
-import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.CLAW_OPEN_POS;
-import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.COUNTS_PER_INCH;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.*;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import android.provider.Telephony;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.DuckPosDetermination.*;
+import org.firstinspires.ftc.teamcode.HardwarePushbot_TC;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -90,9 +89,9 @@ import org.openftc.easyopencv.OpenCvWebcam;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: RedLeftAuto_Storage", group="FreightFrenzy")
-//@Disabled
-public class AutoRedLeft_Storage extends LinearOpMode {
+@Autonomous(name="Pushbot: RedLeftAuto_Warehouse", group="FreightFrenzy")
+@Disabled
+public class AutoRedLeft_Warehouse extends LinearOpMode {
    // private DistanceSensor sensorRange;
 
     /* Declare OpMode members. */
@@ -104,7 +103,7 @@ public class AutoRedLeft_Storage extends LinearOpMode {
 
     OpenCvWebcam webcam;
     InLineDuckPosDeterminationPipeline pipeline;
-    EncoderDrive encoderDrive = new EncoderDrive();
+   // EncoderDrive encoderDrive = new EncoderDrive();
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -162,6 +161,11 @@ public class AutoRedLeft_Storage extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        
+        //so stop() actually works
+        if(isStopRequested()){
+            return;
+        }
 
         //  pipeline = new DuckPositionDetermination();
         while (opModeIsActive()) {
@@ -301,8 +305,7 @@ public class AutoRedLeft_Storage extends LinearOpMode {
             encoderDriveInLine(0.2,-4,-4,-4,-4,5);
         }
 */
-        encoderDriveInLine(0.6,-20,-20,-20,-20,5);
-      //  encoderDriveInLine(0.6,120,120,120,120,5);
+        encoderDriveInLine(0.6,120,120,120,120,5);
         encoderDriveArmInLine(robot.ArmMotor, 0.1, ArmMovement, 5);
 
         telemetry.addData("Path", "Complete");
@@ -512,10 +515,10 @@ public class AutoRedLeft_Storage extends LinearOpMode {
 
         // Volatile since accessed by OpMode thread w/o synchronization
         // Volatile since accessed by OpMode thread w/o synchronization
-        private volatile DuckPositionInLine position;
+        private volatile InLineDuckPosDeterminationPipeline.DuckPositionInLine position;
 
         {
-            position = DuckPositionInLine.LEFT;
+            position = InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT;
         }
 
         /*
@@ -654,7 +657,7 @@ public class AutoRedLeft_Storage extends LinearOpMode {
              */
             if(min == avg1) // Was it from region 1?
             {
-                position = DuckPositionInLine.LEFT; // Record our analysis
+                position = InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT; // Record our analysis
 
                 /*
                  * Draw a solid rectangle on top of the chosen region.
@@ -669,7 +672,7 @@ public class AutoRedLeft_Storage extends LinearOpMode {
             }
             else if(min == avg2) // Was it from region 2?
             {
-                position = DuckPositionInLine.CENTER; // Record our analysis
+                position = InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER; // Record our analysis
 
                 /*
                  * Draw a solid rectangle on top of the chosen region.
@@ -684,7 +687,7 @@ public class AutoRedLeft_Storage extends LinearOpMode {
             }
             else if(min == avg3) // Was it from region 3?
             {
-                position = DuckPositionInLine.RIGHT; // Record our analysis
+                position = InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT; // Record our analysis
 
                 /*
                  * Draw a solid rectangle on top of the chosen region.
@@ -699,7 +702,7 @@ public class AutoRedLeft_Storage extends LinearOpMode {
             }
             else if(min < avg1) // Was it from region 3?
             {
-                position = DuckPositionInLine.NODUCK; // Record our analysis
+                position = InLineDuckPosDeterminationPipeline.DuckPositionInLine.NODUCK; // Record our analysis
 
             }
 
@@ -715,7 +718,7 @@ public class AutoRedLeft_Storage extends LinearOpMode {
         /*
          * Call this from the OpMode thread to obtain the latest analysis
          */
-        public DuckPositionInLine getAnalysis()
+        public InLineDuckPosDeterminationPipeline.DuckPositionInLine getAnalysis()
         {
             return position;
         }

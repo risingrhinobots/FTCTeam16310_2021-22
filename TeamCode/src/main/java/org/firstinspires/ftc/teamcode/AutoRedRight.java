@@ -209,13 +209,18 @@ public class AutoRedRight extends LinearOpMode {
         }
 
         //raise the arm according the duck position
-        encoderDriveArmInLine(robot.ArmMotor, 0.1, -ArmMovement, ArmMovementTimeout);
+        encoderDriveArmInLine(robot.ArmMotor, 0.2, -ArmMovement, ArmMovementTimeout);
         sleep(500);
 
-        //move towards the alliance hub
-        encoderDriveInLine(0.5,14.5,14.5,14.5,14.5,5);
-
-
+        if(position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT){
+            encoderDriveInLine(0.5,18,18,18,18,5);
+            robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
+        }
+        else {
+            //move towards the alliance hub
+            encoderDriveInLine(0.5, 16, 16, 16, 16, 5);
+        }
+/*
         //baesd on the level adjust any driving forward movement
         if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
             encoderDriveInLine(0.1,2.5,2.5,2.5,2.5,5);
@@ -228,7 +233,7 @@ public class AutoRedRight extends LinearOpMode {
             encoderDriveInLine(0.2,4.5,4.5,4.5,4.5,5);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
         }
-
+*/
         sleep(300);
 
         //open the claw up so that the frieght drops on the alliance hub
@@ -255,13 +260,22 @@ public class AutoRedRight extends LinearOpMode {
         encoderDriveInLine(0.2,4.5,-4.5,-4.5,4.5,2);
 
         //move into warehouse
-        encoderDriveInLine(0.5,60,60,60,60,5);
+        encoderDriveInLine(0.5,57,57,57,57,5);
 
         //strafe left inside the warehouse
-        encoderDriveInLine( 0.5, -20, 20,20,-20, 5);
+   //     encoderDriveInLine( 0.5, -20, 20,20,-20, 5);
 
         //move right a certain number of degrees for safety into warehouse
-        encoderDriveArmInLine(robot.ArmMotor, 0.1, ArmMovement, ArmMovementTimeout);
+        encoderDriveArmInLine(robot.ArmMotor, 0.2, ArmMovement, ArmMovementTimeout);
+
+        robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS - 0.05);
+        sleep(200);
+        robot.ClawServo.setPosition(CLAW_OPEN_POS);
+        sleep(200);
+
+        //move into warehouse
+        //encoderDriveInLine(0.5,5,5,5,5,5);
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
