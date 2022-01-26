@@ -60,7 +60,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.*;
-
+import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
@@ -84,6 +84,8 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     // Declare OpMode members.
 
     private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime rumbleTimer = new ElapsedTime();
+    Gamepad.RumbleEffect customRumbleEffect;
     private DcMotor FrontLeftDrive = null;
     private DcMotor FrontRightDrive = null;
     private DcMotor BackLeftDrive = null;
@@ -108,6 +110,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     static final double CLAW_OPEN_POS = 0.20;
     static final double CLAW_CLOSE_POS = 0.0;
     static final double CLAWREACH_MAX_POS = 0.1;
+    static final double TOTAL_TIME_IN_SECONDS = 120;
     double driveboost= 0.75;
     double turnboost =0.6;
     double strafeboost = 0.7;
@@ -197,6 +200,8 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             double BackLeftPower;
             double BackRightPower;
             double ArmPower;
+            rumbleTimer.reset();
+            rumbleTimer.startTime();
 
 
             double drive= 0;
@@ -208,7 +213,16 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             turn  = turnboost * (gamepad1.left_stick_x);
             strafe = strafeboost * (gamepad1.right_stick_x);
 
+            //custom rumble effect
+            customRumbleEffect = new Gamepad.RumbleEffect.Builder()
+                    .addStep(0.2,0.2,3000)
+                    .build();
 
+            //at 40 seconds, it saids a rumble to both controllers for three seconds
+            if(rumbleTimer.seconds() == (TOTAL_TIME_IN_SECONDS - 40)){
+                    gamepad1.runRumbleEffect(customRumbleEffect);
+                    gamepad2.runRumbleEffect(customRumbleEffect);
+            }
 
 
 
