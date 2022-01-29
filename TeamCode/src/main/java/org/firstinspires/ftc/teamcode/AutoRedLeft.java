@@ -218,7 +218,7 @@ public class AutoRedLeft extends LinearOpMode {
         encoderDriveInLine(0.5,-10,10,10,-10,5);
 
         // move back a little bit more
-        encoderDriveInLine(0.5,-5,-5,-5,-5,5);
+        encoderDriveInLine(0.5,-6,-6,-6,-6,5);
 
 
         //straffe left towards the middle of the field to position to move towards alliance hub
@@ -246,28 +246,29 @@ public class AutoRedLeft extends LinearOpMode {
 
         //move towards the alliance hub
         //if the duck is on the right side, there will be special code
-
+/*
         if(position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT){
-            encoderDriveInLine(0.5,30,30,30,30,7);
+            encoderDriveInLine(0.5,29,29,29,29,7);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
         }
         else {
-            encoderDriveInLine(0.5, 26.7, 26.7, 26.7, 26.7, 7);
+            encoderDriveInLine(0.5, 25.7, 25.7, 25.7, 25.7, 7);
         }
-        /*
+
+ */
+
         //baesd on the level adjust any driving forward movement
         if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            encoderDriveInLine(0.1,3.2,3.2,3.2,3.2,5);
-            //robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
+             encoderDriveInLine(0.5,25,25,25,25,7);
+
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-            encoderDriveInLine(0.2,3.5,3.5,3.5,3,5);
-            //robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
-            //move towards the alliance hub
+             encoderDriveInLine(0.5,26,26,26,26,7);
+
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
-            encoderDriveInLine(0.2,7,7,7,7,5);
+           encoderDriveInLine(0.5,29.5,29.5,29.5,29.5,7);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
         }
-*/
+
 
         sleep(200);
 
@@ -277,7 +278,7 @@ public class AutoRedLeft extends LinearOpMode {
         sleep(250);
 
         //move back towards the storage unit
-        encoderDriveInLine(0.5,-30,-30,-30,-30,5);
+        encoderDriveInLine(0.5,-33,-33,-33,-33,5);
 
         robot.ClawServo.setPosition(CLAW_CLOSE_POS);
         sleep(200);

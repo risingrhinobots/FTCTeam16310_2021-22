@@ -110,7 +110,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     static final double CLAW_OPEN_POS = 0.20;
     static final double CLAW_CLOSE_POS = 0.0;
     static final double CLAWREACH_MAX_POS = 0.1;
-    static final double TOTAL_TIME_IN_SECONDS = 120;
+    static final double TOTAL_TIME_IN_SECONDS = 90;
     double driveboost= 0.75;
     double turnboost =0.6;
     double strafeboost = 0.7;
@@ -212,7 +212,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             drive = driveboost *  (-gamepad1.left_stick_y);
             turn  = turnboost * (gamepad1.left_stick_x);
             strafe = strafeboost * (gamepad1.right_stick_x);
-
+/*
             //custom rumble effect
             customRumbleEffect = new Gamepad.RumbleEffect.Builder()
                     .addStep(0.2,0.2,3000)
@@ -223,7 +223,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                     gamepad1.runRumbleEffect(customRumbleEffect);
                     gamepad2.runRumbleEffect(customRumbleEffect);
             }
-
+*/
 
 
             // Choose to drive using either Tank Mode, or POV Mode
@@ -243,10 +243,11 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
 
 
 /*
-            if (sensorRange.getDistance(DistanceUnit.METER) <=0.7 ) {
+            if (sensorRange.getDistance(DistanceUnit.METER) <=0.35 ) {
                 // Keep stepping up until we hit the max value.
                 position = 0; //rotate right
                 CarouselServo.setPower(position);
+                CarouselBlueServo.setPower(position);
             }
 */
             //Claw is open position
@@ -296,11 +297,13 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 // Keep stepping up until we hit the max value.
                 position = -1; //stop
                 CarouselServo.setPower(position);
+               // CarouselBlueServo.setPower(position);
              }
 
             if (gamepad2.b) {
                 // Keep stepping up until we hit the max value.
                 position = 1; //rotate right
+                //CarouselServo.setPower(position);
                 CarouselBlueServo.setPower(position);
 
             }

@@ -207,9 +207,9 @@ public class AutoBlueRight extends LinearOpMode {
         encoderDriveInLine(0.3,-19.0,19.0,-19.0,19.0,5);
 
         //Strafe right to the carousel
-        encoderDriveInLine(0.4,22,-22,-22,22,5);
+        encoderDriveInLine(0.4,23,-23,-23,23,5);
         //slowly straffe right to the carousel
-        encoderDriveInLine(0.2,2.9,-2.9,-2.9,2.9,5);
+        encoderDriveInLine(0.2,3.2,-3.2,-3.2,3.2,5);
         sleep(300);
         //CAROUSEL TIME
         ElapsedTime carouselTimer = new ElapsedTime();
@@ -248,7 +248,7 @@ public class AutoBlueRight extends LinearOpMode {
         telemetry.update();
         //raise the arm according the duck position
         encoderDriveArmInLine(robot.ArmMotor, 0.1, -ArmMovement, ArmMovementTimeout);
-
+/*
         //move towards the alliance hub
         if(position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT){
             encoderDriveInLine(0.5,27.0,27.0,27.0,27.0,5);
@@ -257,20 +257,25 @@ public class AutoBlueRight extends LinearOpMode {
         else {
             encoderDriveInLine(0.5, 24.5, 24.5, 24.5, 24.5, 5);
         }
+
+ */
         sleep(200);
 
-        /*baesd on the level adjust any driving forward movement
+        //baesd on the level adjust any driving forward movement
         if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            encoderDriveInLine(0.1,2.5,2.5,2.5,2.5,5);
-            //robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
+            encoderDriveInLine(0.5,25,25,25,25,7);
+
         } else if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-            encoderDriveInLine(0.2,2.5,2.5,2.5,2.5,5);
-           // robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
+            encoderDriveInLine(0.5,26,26,26,26,7);
+
         } else if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
-            encoderDriveInLine(0.2,4.5,4.5,4.5,4.5,5);
+            encoderDriveInLine(0.5,29.5,29.5,29.5,29.5,7);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
         }
-        sleep(300);*/
+
+
+        sleep(200);
+
 
         //open the claw up so that the frieght drops on the alliance hub
         robot.ClawServo.setPosition(CLAW_OPEN_POS);

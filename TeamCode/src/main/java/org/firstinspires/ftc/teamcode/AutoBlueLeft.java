@@ -216,36 +216,26 @@ public class AutoBlueLeft extends LinearOpMode {
         //raise the arm according the duck position
         encoderDriveArmInLine(robot.ArmMotor, 0.1, -ArmMovement, ArmMovementTimeout);
 
-        //move towards the alliance hub
-        if(position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT){
-            encoderDriveInLine(0.5,18.5,18.5,18.5,18.5,5);
-            robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
-        }
-        else {
-            encoderDriveInLine(0.5, 16.0, 16.0, 16.0, 16.0, 5);
-        }
-        sleep(500);
 
-        /*baesd on the level adjust any driving forward movement
+        sleep(200);
+
+       // baesd on the level adjust any driving forward movement
         if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-            encoderDriveInLine(0.1,2.5,2.5,2.5,2.5,5);
-            robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
+            encoderDriveInLine(0.5,15,15,15,15,5);
+
         } else if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-            encoderDriveInLine(0.2,3.5,3.5,3.5,3.5,5);
-            robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
+            encoderDriveInLine(0.5,17,17,17,17,5);
+
             //move towards the alliance hub
         } else if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
-            encoderDriveInLine(0.2,4.5,4.5,4.5,4.5,5);
+            encoderDriveInLine(0.5,19.2,19.2,19.2,19.2,5);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
-        }*/
+        }
 
 
         sleep(300);
 
-
-
         //open the claw up so that the frieght drops on the alliance hub
-
         robot.ClawServo.setPosition(CLAW_OPEN_POS);
 
         sleep(500);
@@ -265,17 +255,20 @@ public class AutoBlueLeft extends LinearOpMode {
         encoderDriveInLine(0.5,-19,19,-19,19,5);
 
         //straffe to avoid barrier
-        encoderDriveInLine(0.2,-4.25,4.25,4.25,-4.25,4);
+        encoderDriveInLine(0.2,-4.5,4.5,4.5,-4.5,4);
 
         //move into warehouse
-        encoderDriveInLine(0.5,74,74,74,74,8);
+        encoderDriveInLine(0.5,55,55,55,55,8);
 
 
         encoderDriveArmInLine(robot.ArmMotor, 0.1,ArmMovement, ArmMovementTimeout);
-
+        robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS - 0.05);
+        sleep(200);
+        robot.ClawServo.setPosition(CLAW_OPEN_POS);
+        sleep(200);
         telemetry.addData("Path", "Complete");
         telemetry.update();
-        sleep(5000);
+
     }
 
 
