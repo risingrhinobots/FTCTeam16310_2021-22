@@ -106,7 +106,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     double  ArmSwiwelPosition = 0; // Start at halfway position
     boolean rampUp = true;
     static final double CLAWREACH_PULLIN_P0S = 0.80;
-    static final double CLAWREACH_PICK_POS = 0.28;
+    static final double CLAWREACH_PICK_POS = 0.23;
     static final double CLAW_OPEN_POS = 0.20;
     static final double CLAW_CLOSE_POS = 0.0;
     static final double CLAWREACH_MAX_POS = 0.1;
@@ -250,26 +250,27 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 CarouselBlueServo.setPower(position);
             }
 */
+            //pull in the claw to avoid hitting any obstacles
+            if (gamepad1.y) {
+                position = CLAW_CLOSE_POS;
+                ClawServo.setPosition(position);
+                sleep(100);
+                ClawReachPosition = CLAWREACH_PULLIN_P0S;
+                ClawReachServo.setPosition(ClawReachPosition);
+
+            }
             //Claw is open position
             if (gamepad1.a) {
                 position = CLAW_OPEN_POS;
                 ClawServo.setPosition(position);
-                // Display the current value
-                //telemetry.addData("Servo Position", "%5.2f", position);
-               // telemetry.addData(">", "Press Stop to end test.");
-                //telemetry.update();
+
             }
             //Claw is closed position
             if (gamepad1.b) {
                 position = CLAW_CLOSE_POS;
                 ClawServo.setPosition(position);
-                // Display the current value
-               // telemetry.addData("Servo Position", "%5.2f", position);
-              //  telemetry.addData(">", "Press Stop to end test.");
-               // telemetry.update();
             }
-
-
+            //get the claw ready for picking the blocks
             if (gamepad1.x) {
 
                 ClawReachPosition = CLAWREACH_PICK_POS;
