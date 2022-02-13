@@ -29,7 +29,16 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.*;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.ARMMOVEMENT_HIGH;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.ARMMOVEMENT_LOW;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.ARMMOVEMENT_MID;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.CLAWREACH_MAX_POS;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.CLAWREACH_PICK_POS;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.CLAWREACH_PULLIN_P0S;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.CLAW_CLOSE_POS;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.CLAW_OPEN_POS;
+import static org.firstinspires.ftc.teamcode.HardwarePushbot_TC.COUNTS_PER_INCH;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -81,9 +90,9 @@ import org.openftc.easyopencv.OpenCvWebcam;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: RedRightAuto", group="FreightFrenzy")
+@Autonomous(name="Pushbot: AutoRedRightInner", group="FreightFrenzy")
 //@Disabled
-public class AutoRedRight extends LinearOpMode {
+public class AutoRedRightInner extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot_TC robot   = new HardwarePushbot_TC();   // Use a Pushbot's hardware
@@ -145,8 +154,9 @@ public class AutoRedRight extends LinearOpMode {
         telemetry.addData("Analysis", pipeline.getAnalysis());
         telemetry.update();*/
 
-        robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
         robot.ClawServo.setPosition(CLAW_CLOSE_POS);
+        sleep(500);
+        robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
 
 
         // Wait for the game to start (driver presses PLAY)
@@ -193,16 +203,16 @@ public class AutoRedRight extends LinearOpMode {
         encoderDriveInLine(0.5,-19,19,-19,19,5);
 
         robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
-        if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
+        if (position1 == AutoRedRightInner.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
             ArmMovement = ARMMOVEMENT_LOW;
             ArmMovementTimeout = 5;
             telemetry.addData("Duck position", "Left");
-        } else if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
+        } else if (position1 == AutoRedRightInner.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
             ArmMovement = ARMMOVEMENT_MID;
             ArmMovementTimeout = 7;
             telemetry.addData("Duck position", "Middle");
             //move towards the alliance hub
-        } else if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
+        } else if (position1 == AutoRedRightInner.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
             ArmMovement = ARMMOVEMENT_HIGH;
             ArmMovementTimeout = 9;
             telemetry.addData("Duck position", "Right");
@@ -224,13 +234,13 @@ public class AutoRedRight extends LinearOpMode {
 
 
         //baesd on the level adjust any driving forward movement
-        if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
+        if (position1 == AutoRedRightInner.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
             encoderDriveInLine(0.5,15,15,15,15,7);
 
-        } else if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
+        } else if (position1 == AutoRedRightInner.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
             encoderDriveInLine(0.5,17,17,17,17,7);
 
-        } else if (position1 == AutoRedRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
+        } else if (position1 == AutoRedRightInner.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
             encoderDriveInLine(0.5,19.2,19.2,19.2,19.2,10);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
         }
@@ -263,9 +273,6 @@ public class AutoRedRight extends LinearOpMode {
 
         //move into warehouse
         encoderDriveInLine(0.5,55,55,55,55,5);
-
-        //strafe left inside the warehouse
-   //     encoderDriveInLine( 0.5, -20, 20,20,-20, 5);
 
         //move right a certain number of degrees for safety into warehouse
         encoderDriveArmInLine(robot.ArmMotor, 0.2, ArmMovement, ArmMovementTimeout);
