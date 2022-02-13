@@ -204,7 +204,7 @@ public class AutoRedLeft extends LinearOpMode {
         carouselTimer.reset();
         carouselTimer.startTime();
 
-        while(carouselTimer.seconds() <= 2) {
+        while(carouselTimer.seconds() <= 3) {
             CarouselPosition=-1;
             robot.CarouselServo.setPower(CarouselPosition);
         }

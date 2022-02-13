@@ -264,8 +264,7 @@ public class AutoRedRightOuter extends LinearOpMode {
 
         //move into warehouse
         encoderDriveInLine(0.5,55,55,55,55,5);
-        //strafe left inside the warehouse
-        encoderDriveInLine( 0.5, -20, 20,20,-20, 5);
+
 
         //move right a certain number of degrees for safety into warehouse
         encoderDriveArmInLine(robot.ArmMotor, 0.2, ArmMovement, ArmMovementTimeout);
