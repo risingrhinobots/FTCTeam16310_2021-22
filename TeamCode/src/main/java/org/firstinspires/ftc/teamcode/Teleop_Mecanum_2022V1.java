@@ -277,6 +277,26 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 ClawReachServo.setPosition(ClawReachPosition);
 
             }
+            if(gamepad1.y){
+                position = CLAW_CLOSE_POS;
+                ClawServo.setPosition(position);
+                sleep(100);
+                ClawReachPosition = CLAWREACH_PULLIN_P0S;
+                ClawReachServo.setPosition(ClawReachPosition);
+            }
+            if (gamepad1.left_bumper) {
+
+                position = CLAW_OPEN_POS+1.5;
+                ClawServo.setPosition(position);
+            }
+            if(gamepad1.right_bumper){
+                if(driveboost == 0.95){
+                    driveboost = 0.75;
+                }
+                else {
+                    driveboost = 0.95;
+                }
+            }
 
 
             if (gamepad2.y) {
@@ -317,20 +337,17 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             }
 
             //position ARM for capping
-            if (gamepad1.left_bumper) {
 
-                position = CLAW_OPEN_POS+1.5;
-                ClawServo.setPosition(position);
-            }
-            //position ARM for capping
-            if (gamepad1.right_bumper) {
-
-               //position = CLAW_CLOSE_POS;
-                //ClawServo.setPosition(position);
+            /*position ARM for capping
+            if(gamepad1.right_bumper) {
+               /*position = CLAW_CLOSE_POS;
+                /ClawServo.setPosition(position);
                 ArmMotor.setPower(Math.abs(0.2));
                 ArmMotor.setTargetPosition((int) ArmStartingPosition);
                 ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            }
+
+            }*/
+
             //position ARM for capping
             if (gamepad2.left_bumper) {
                 ClawReachPosition = CLAWREACH_PICK_POS;
