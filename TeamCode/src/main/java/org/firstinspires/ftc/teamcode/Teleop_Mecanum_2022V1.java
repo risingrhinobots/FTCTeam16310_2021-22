@@ -97,6 +97,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     private Servo ClawServo = null;
     private Servo ClawReachServo = null;
     private Servo CapPickServo = null;
+    private Servo CapGrabClawServo = null;
    // private DistanceSensor sensorRange;
     static final double COUNTS_PER_MOTOR_REV = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 1;   // 1  // This is < 1.0 if geared UP
@@ -144,6 +145,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
         CarouselServo = hardwareMap.get(CRServo.class, "Carousel");
         CarouselBlueServo = hardwareMap.get(CRServo.class, "CarouselBlue");
         CapPickServo = hardwareMap.get(Servo.class, "CapPick");
+        CapGrabClawServo= hardwareMap.get(Servo.class, "CapGrabClaw");
         // you can use this as a regular DistanceSensor.
        // sensorRange = hardwareMap.get(DistanceSensor.class, "Sensor_Range");
 
@@ -190,6 +192,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
         telemetry.update();
         ArmStartingPosition = ArmMotor.getCurrentPosition();
         // Wait for the game to start (driver presses PLAY)
+        CapGrabClawServo.setPosition(0.39);
         waitForStart();
         runtime.reset();
 
@@ -293,10 +296,14 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             }
 
             if (gamepad1.right_bumper) {
-                InLineEncoderDriveArm(ArmReach,0.2,10,15);
-                sleep(200);
+                CapPickServo.setPosition(0.85);
+                InLineEncoderDriveArm(ArmReach,0.2,5,15);
+                sleep(300);
+                InLineEncoderDriveArm(ArmReach,0.2,5,15);
                 CapPickServo.setPosition(0.2);
-
+            }
+            if(gamepad1.dpad_down){
+                CapGrabClawServo.setPosition(0.85);
             }
 
 
@@ -333,10 +340,10 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             if (gamepad1.dpad_up){
                 InLineEncoderDriveArmR(ArmReach, 0.3, 9, 5,ArmReachStartingPosition);
             }
-            if (gamepad1.dpad_down){
+           /* if (gamepad1.dpad_down){
                 InLineEncoderDriveArmR(ArmReach, 0.3, -9, 5,ArmReachStartingPosition);
             }
-
+*/
             if (gamepad2.dpad_up) {
                 InLineEncoderDriveArm(ArmMotor, 0.3, -3, 7);
             }
