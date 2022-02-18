@@ -96,6 +96,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     private DcMotor ArmReach = null;
     private Servo ClawServo = null;
     private Servo ClawReachServo = null;
+    private Servo CapPickServo = null;
    // private DistanceSensor sensorRange;
     static final double COUNTS_PER_MOTOR_REV = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 1;   // 1  // This is < 1.0 if geared UP
@@ -142,6 +143,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
         ClawReachServo = hardwareMap.get(Servo.class, "ClawReach");
         CarouselServo = hardwareMap.get(CRServo.class, "Carousel");
         CarouselBlueServo = hardwareMap.get(CRServo.class, "CarouselBlue");
+        CapPickServo = hardwareMap.get(Servo.class, "CapPick");
         // you can use this as a regular DistanceSensor.
        // sensorRange = hardwareMap.get(DistanceSensor.class, "Sensor_Range");
 
@@ -291,12 +293,11 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             }
 
             if (gamepad1.right_bumper) {
-                driveboost = 0.99;
+                InLineEncoderDriveArm(ArmReach,0.2,10,15);
+                sleep(200);
+                CapPickServo.setPosition(0.2);
 
             }
-
-
-
 
 
             if (gamepad2.y) {

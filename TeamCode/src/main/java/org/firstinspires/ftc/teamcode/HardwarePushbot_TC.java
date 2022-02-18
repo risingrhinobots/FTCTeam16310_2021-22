@@ -67,6 +67,8 @@ public class HardwarePushbot_TC
     public CRServo CarouselServo=null;
     public Servo ClawReachServo=null;
     public Servo   ClawServo=null;
+    public Servo   CapPickServo=null;
+    public Servo   CapGrabClawServo=null;
 
 
     static final double     COUNTS_PER_MOTOR_REV    = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
@@ -111,7 +113,8 @@ public class HardwarePushbot_TC
         ClawServo = hwMap.get(Servo.class, "Claw");
         ClawReachServo = hwMap.get(Servo.class, "ClawReach");
         CarouselServo = hwMap.get(CRServo.class, "Carousel");
-
+        CapPickServo = hwMap.get(Servo.class, "CapPick");
+        CapGrabClawServo= hwMap.get(Servo.class, "CapGrabClaw");
 
 
         frontLeft.setDirection(DcMotorEx.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
