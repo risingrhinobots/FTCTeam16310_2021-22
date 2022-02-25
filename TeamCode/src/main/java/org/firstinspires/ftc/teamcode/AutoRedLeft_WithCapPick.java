@@ -156,7 +156,8 @@ public class AutoRedLeft_WithCapPick extends LinearOpMode {
         telemetry.update();*/
 
         robot.ClawServo.setPosition(CLAW_CLOSE_POS);
-        sleep(100);
+        sleep(1000);
+
         robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
         sleep(100);
 
@@ -200,26 +201,7 @@ public class AutoRedLeft_WithCapPick extends LinearOpMode {
         //straffe towards the inside of the field before moving to the carousel
 
 
-        encoderDriveArmInLine(robot.ArmReach, 0.2, 21.7, 5);
-        sleep(500);
-        robot.CapPickServo.setPosition(0.4);
-        sleep(1000);
-        robot.CapGrabClawServo.setPosition(0.65);
-        sleep(1500);
-        robot.CapPickServo.setPosition(0.39);
-        sleep(300);
-        encoderDriveInLine(0.2,0.2,0.2,0.2,0.2,5);
-        sleep(2000);
-        robot.CapGrabClawServo.setPosition(0.3);
-        sleep(1000);
-        robot.CapPickServo.setPosition(0.85);
-        sleep(500);
-        encoderDriveArmInLine(robot.ArmReach, 0.2, -15, 15);
-        sleep(200);
-        encoderDriveArmInLine(robot.ArmReach,0.2,10,15);
-        sleep(200);
-        robot.CapPickServo.setPosition(0.2);
-        sleep(2000000);
+
 
         encoderDriveInLine(0.2,-5,5,5,-5,2);
         //position arm for delivery based on duck position
@@ -284,12 +266,12 @@ public class AutoRedLeft_WithCapPick extends LinearOpMode {
 
  */
 
-        //baesd on the level adjust any driving forward movement
+        //based on the level adjust any driving forward movement
         if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
-             encoderDriveInLine(0.5,26,26,26,26,7);
+             encoderDriveInLine(0.5,29,29,29,29,7);
 
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-             encoderDriveInLine(0.5,26,26,26,26,7);
+             encoderDriveInLine(0.5,29,29,29,29,7);
 
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
            encoderDriveInLine(0.5,29.5,29.5,29.5,29.5,7);
@@ -297,18 +279,18 @@ public class AutoRedLeft_WithCapPick extends LinearOpMode {
         }
 
 
-        sleep(200);
+        sleep(500);
 
         //open the claw up so that the frieght drops on the alliance hub
         robot.ClawServo.setPosition(CLAW_OPEN_POS);
 
-        sleep(250);
+        sleep(550);
 
         //move back towards the storage unit
         encoderDriveInLine(0.5,-33,-33,-33,-33,5);
 
         robot.ClawServo.setPosition(CLAW_CLOSE_POS);
-        sleep(200);
+        sleep(100);
 
         robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
         sleep(100);
@@ -318,12 +300,34 @@ public class AutoRedLeft_WithCapPick extends LinearOpMode {
 
 
         //strafe right towards the inside of the storage unit
-        encoderDriveInLine(0.2,15.25,-15.3,-15.3,15.3,2);
+        encoderDriveInLine(0.2,20.3,-20.3,-20.3,20.3,2);
+
+
+        encoderDriveArmInLine(robot.ArmReach, 0.2, 14, 5);
+        sleep(200);
+        robot.CapPickServo.setPosition(0.4);
+        sleep(300);
+        robot.CapGrabClawServo.setPosition(0.65);
+        sleep(500);
+        encoderDriveArmInLine(robot.ArmReach, 0.2, 7.5, 5);
+        sleep(200);
         //strafe right towards the inside of the storage unit
-        encoderDriveInLine(0.2,1.2,1.2,1.2,1.2,5);
+        encoderDriveInLine(0.2, -2,2,2,-2,2);
 
+ //       encoderDriveInLine(0.2,1.1,1.1,1.1,1.1,5);
+        sleep(300);
+        robot.CapPickServo.setPosition(0.39);
+        sleep(200);
+        encoderDriveInLine(0.2,0.2,0.2,0.2,0.2,5);
+        sleep(200);
+        robot.CapGrabClawServo.setPosition(0.3);
+        sleep(100);
+        robot.CapPickServo.setPosition(0.85);
+        sleep(100);
+        encoderDriveArmInLine(robot.ArmReach, 0.2, -15, 15);
+        sleep(200);
 
-
+        //sleep(2000000);
 
 
 

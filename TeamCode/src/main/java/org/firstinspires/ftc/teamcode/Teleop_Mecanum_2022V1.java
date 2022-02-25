@@ -108,9 +108,9 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     double  ArmSwiwelPosition = 0; // Start at halfway position
     boolean rampUp = true;
     static final double CLAWREACH_PULLIN_P0S = 0.80;
-    static final double CLAWREACH_PICK_POS = 0.23;
-    static final double CLAW_OPEN_POS = 0.20;
-    static final double CLAW_CLOSE_POS = 0.0;
+    static final double CLAWREACH_PICK_POS = 0.24;
+    static final double CLAW_OPEN_POS = 0.43;
+    static final double CLAW_CLOSE_POS = 0.20;
     static final double CLAWREACH_MAX_POS = 0.1;
     static final double TOTAL_TIME_IN_SECONDS = 90;
     double driveboost= 0.75;
