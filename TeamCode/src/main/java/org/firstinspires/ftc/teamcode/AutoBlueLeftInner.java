@@ -129,10 +129,6 @@ public class AutoBlueLeftInner extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders and Setting up webcam pipeline");    //
         telemetry.update();
 
-       /* robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);*/
 
         robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

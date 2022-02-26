@@ -146,16 +146,6 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
         CarouselBlueServo = hardwareMap.get(CRServo.class, "CarouselBlue");
         CapPickServo = hardwareMap.get(Servo.class, "CapPick");
         CapGrabClawServo= hardwareMap.get(Servo.class, "CapGrabClaw");
-        // you can use this as a regular DistanceSensor.
-       // sensorRange = hardwareMap.get(DistanceSensor.class, "Sensor_Range");
-
-        // you can also cast this to a Rev2mDistanceSensor if you want to use added
-        // methods associated with the Rev2mDistanceSensor class.
-       // Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
-
-
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
 
 
        FrontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -184,11 +174,6 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
         telemetry.addData("Arm Motor Get current Position", ArmMotor.getCurrentPosition());
         telemetry.addData("FL Get current Position", FrontLeftDrive.getCurrentPosition());
         telemetry.addData("FR Get current Position", FrontRightDrive.getCurrentPosition());
-      /*  telemetry.addData("deviceName",sensorRange.getDeviceName() );
-        telemetry.addData("range", String.format("%.01f mm", sensorRange.getDistance(DistanceUnit.MM)));
-        telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
-        telemetry.addData("range", String.format("%.01f m", sensorRange.getDistance(DistanceUnit.METER)));
-        telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));*/
         telemetry.update();
         ArmStartingPosition = ArmMotor.getCurrentPosition();
         // Wait for the game to start (driver presses PLAY)
@@ -217,18 +202,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
             drive = driveboost *  (-gamepad1.left_stick_y);
             turn  = turnboost * (gamepad1.left_stick_x);
             strafe = strafeboost * (gamepad1.right_stick_x);
-/*
-            //custom rumble effect
-            customRumbleEffect = new Gamepad.RumbleEffect.Builder()
-                    .addStep(0.2,0.2,3000)
-                    .build();
 
-            //at 40 seconds, it saids a rumble to both controllers for three seconds
-            if(rumbleTimer.seconds() == (TOTAL_TIME_IN_SECONDS - 40)){
-                    gamepad1.runRumbleEffect(customRumbleEffect);
-                    gamepad2.runRumbleEffect(customRumbleEffect);
-            }
-*/
 
 
             // Choose to drive using either Tank Mode, or POV Mode
@@ -336,14 +310,6 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 CarouselBlueServo.setPower(position);
 
             }
-/*
-            if (gamepad1.dpad_up){
-                InLineEncoderDriveArmR(ArmReach, 0.3, 9, 5,ArmReachStartingPosition);
-            }
-           /* if (gamepad1.dpad_down){
-                InLineEncoderDriveArmR(ArmReach, 0.3, -9, 5,ArmReachStartingPosition);
-            }
-*/
             if (gamepad2.dpad_up) {
                 InLineEncoderDriveArm(ArmMotor, 0.3, -3, 7);
             }
