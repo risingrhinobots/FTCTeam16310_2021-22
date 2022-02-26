@@ -265,7 +265,7 @@ public class AutoRedLeft extends LinearOpMode {
              encoderDriveInLine(0.5,26,26,26,26,7);
 
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
-           encoderDriveInLine(0.5,29.5,29.5,29.5,29.5,7);
+           encoderDriveInLine(0.5,30,30,30,30,7);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
         }
 
