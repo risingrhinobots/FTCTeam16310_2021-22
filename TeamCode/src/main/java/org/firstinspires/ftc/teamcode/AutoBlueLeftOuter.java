@@ -82,9 +82,9 @@ import org.openftc.easyopencv.OpenCvWebcam;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: BlueLeftAuto", group="FreightFrenzy")
+@Autonomous(name="Pushbot: AutoBlueLeftOuter", group="FreightFrenzy")
 //@Disabled
-public class AutoBlueLeft extends LinearOpMode {
+public class AutoBlueLeftOuter extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot_TC robot   = new HardwarePushbot_TC();   // Use a Pushbot's hardware
@@ -199,16 +199,16 @@ public class AutoBlueLeft extends LinearOpMode {
         sleep(500);
 
         robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS);
-        if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
+        if (position1 == AutoBlueLeftOuter.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
             ArmMovement = ARMMOVEMENT_LOW;
             ArmMovementTimeout = 5;
             telemetry.addData("Duck position", "Left");
-        } else if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
+        } else if (position1 == AutoBlueLeftOuter.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
             ArmMovement = ARMMOVEMENT_MID;
             ArmMovementTimeout = 7;
             telemetry.addData("Duck position", "Middle");
             //move towards the alliance hub
-        } else if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
+        } else if (position1 == AutoBlueLeftOuter.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
             ArmMovement = ARMMOVEMENT_HIGH;
             ArmMovementTimeout = 9;
             telemetry.addData("Duck position", "Right");
@@ -221,14 +221,14 @@ public class AutoBlueLeft extends LinearOpMode {
         sleep(200);
 
        // baesd on the level adjust any driving forward movement
-        if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
+        if (position1 == AutoBlueLeftOuter.InLineDuckPosDeterminationPipeline.DuckPositionInLine.LEFT) {
             encoderDriveInLine(0.5,15,15,15,15,5);
 
-        } else if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
+        } else if (position1 == AutoBlueLeftOuter.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
             encoderDriveInLine(0.5,17,17,17,17,5);
 
             //move towards the alliance hub
-        } else if (position1 == AutoBlueLeft.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
+        } else if (position1 == AutoBlueLeftOuter.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
             encoderDriveInLine(0.5,19.2,19.2,19.2,19.2,5);
             robot.ClawReachServo.setPosition(CLAWREACH_MAX_POS);
         }
