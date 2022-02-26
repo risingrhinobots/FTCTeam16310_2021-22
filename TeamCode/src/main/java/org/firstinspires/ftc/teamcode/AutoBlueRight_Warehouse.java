@@ -152,7 +152,7 @@ public class AutoBlueRight_Warehouse extends LinearOpMode {
         telemetry.update();*/
 
         robot.ClawServo.setPosition(CLAW_CLOSE_POS);
-        sleep(500);
+        sleep(1500);
         robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
 
 

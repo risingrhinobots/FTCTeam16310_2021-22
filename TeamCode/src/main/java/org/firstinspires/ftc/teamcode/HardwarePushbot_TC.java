@@ -79,13 +79,13 @@ public class HardwarePushbot_TC
     static final double     DRIVE_SPEED             = 0.9;
     static final double     TURN_SPEED              = 0.3;
     static final double CLAW_OPEN_POS = 0.43;
-    static final double CLAW_CLOSE_POS = 0.15;
+    static final double CLAW_CLOSE_POS = 0.10;
     static final double CLAWREACH_MAX_POS = 0.1;
     static final double CLAWREACH_PICK_POS = 0.23;
     static final double CLAWREACH_PULLIN_P0S = 0.75;
-    static final double ARMMOVEMENT_LOW = 7;
-    static final double ARMMOVEMENT_MID = 10.5;
-    static final double ARMMOVEMENT_HIGH = 15.5;
+    static final double ARMMOVEMENT_LOW = 5.5;
+    static final double ARMMOVEMENT_MID = 9.5;
+    static final double ARMMOVEMENT_HIGH = 13.5;
     static final double distance = 9;
 
 

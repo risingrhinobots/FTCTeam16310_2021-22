@@ -155,7 +155,7 @@ public class AutoRedRightInner extends LinearOpMode {
         telemetry.update();*/
 
         robot.ClawServo.setPosition(CLAW_CLOSE_POS);
-        sleep(500);
+        sleep(1500);
         robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
 
 
@@ -275,7 +275,7 @@ public class AutoRedRightInner extends LinearOpMode {
         encoderDriveInLine(0.5,55,55,55,55,5);
 
         //strafe left inside the warehouse
-        encoderDriveInLine( 0.5, -20, 20,20,-20, 5);
+        encoderDriveInLine( 0.5, -30, 30,30,-30, 5);
 
         //move right a certain number of degrees for safety into warehouse
         encoderDriveArmInLine(robot.ArmMotor, 0.2, ArmMovement, ArmMovementTimeout);
@@ -286,7 +286,8 @@ public class AutoRedRightInner extends LinearOpMode {
         sleep(200);
 
         //move into warehouse
-        //encoderDriveInLine(0.5,5,5,5,5,5);
+
+       //encoderDriveInLine(0.5,5,5,5,5,5);
 
 
         telemetry.addData("Path", "Complete");

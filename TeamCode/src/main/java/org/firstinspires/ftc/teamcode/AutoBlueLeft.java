@@ -147,8 +147,9 @@ public class AutoBlueLeft extends LinearOpMode {
         telemetry.addData("Analysis", pipeline.getAnalysis());
         telemetry.update();*/
 
-        robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
         robot.ClawServo.setPosition(CLAW_CLOSE_POS);
+        sleep(1500);
+        robot.ClawReachServo.setPosition(CLAWREACH_PULLIN_P0S);
 
 
         // Wait for the game to start (driver presses PLAY)
