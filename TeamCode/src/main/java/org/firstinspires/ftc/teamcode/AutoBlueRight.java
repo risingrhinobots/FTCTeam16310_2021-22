@@ -266,7 +266,7 @@ public class AutoBlueRight extends LinearOpMode {
             encoderDriveInLine(0.5,25,25,25,25,7);
 
         } else if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-            encoderDriveInLine(0.5,26,26,26,26,7);
+            encoderDriveInLine(0.5,25.5,25.,25.5,25.5,7);
 
         } else if (position1 == AutoBlueRight.InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
             encoderDriveInLine(0.5,29.5,29,29,29,7);
