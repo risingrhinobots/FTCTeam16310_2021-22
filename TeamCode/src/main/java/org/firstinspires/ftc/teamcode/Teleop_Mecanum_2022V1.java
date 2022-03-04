@@ -238,6 +238,12 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 ClawReachServo.setPosition(ClawReachPosition);
 
             }
+            if(gamepad1.dpad_up){
+                driveboost=0.99;
+            }
+            if(gamepad1.dpad_down){
+                driveboost=0.75;
+            }
             //Claw is open position
             if (gamepad1.a) {
                 position = CLAW_OPEN_POS;

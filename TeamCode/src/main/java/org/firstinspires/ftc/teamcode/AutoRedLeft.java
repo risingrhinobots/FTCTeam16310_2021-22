@@ -262,7 +262,7 @@ public class AutoRedLeft extends LinearOpMode {
              encoderDriveInLine(0.5,26,26,26,26,7);
 
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.CENTER) {
-             encoderDriveInLine(0.5,26,26,26,26,7);
+             encoderDriveInLine(0.5,26.2,26.2,26.2,26.2,7);
 
         } else if (position1 == InLineDuckPosDeterminationPipeline.DuckPositionInLine.RIGHT) {
            encoderDriveInLine(0.5,30,30,30,30,7);
