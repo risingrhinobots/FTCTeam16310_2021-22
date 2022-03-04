@@ -262,12 +262,12 @@ public class AutoRedRightOuter extends LinearOpMode {
         //straffe towards the inside of the field before moving to the carousel
         encoderDriveInLine(0.2,4.5,-4.5,-4.5,4.5,2);
 
+        //move right a certain number of degrees for safety into warehouse
+        encoderDriveArmInLine(robot.ArmMotor, 0.2, ArmMovement, ArmMovementTimeout);
+
         //move into warehouse
         encoderDriveInLine(0.5,55,55,55,55,5);
 
-
-        //move right a certain number of degrees for safety into warehouse
-        encoderDriveArmInLine(robot.ArmMotor, 0.2, ArmMovement, ArmMovementTimeout);
 
         robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS - 0.05);
         sleep(200);
