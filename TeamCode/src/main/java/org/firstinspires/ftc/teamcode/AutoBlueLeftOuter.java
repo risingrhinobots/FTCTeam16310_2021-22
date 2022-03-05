@@ -256,7 +256,7 @@ public class AutoBlueLeftOuter extends LinearOpMode {
         encoderDriveInLine(0.5,-19,19,-19,19,5);
 
         //straffe to avoid barrier
-        encoderDriveInLine(0.2,-5,5,5,-5,4);
+        encoderDriveInLine(0.2,-5.5,5.5,5.5,-5.5,4);
 
         encoderDriveArmInLine(robot.ArmMotor, 0.1,ArmMovement, ArmMovementTimeout);
         //move into warehouse
