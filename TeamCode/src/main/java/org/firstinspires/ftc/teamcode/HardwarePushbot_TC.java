@@ -78,10 +78,10 @@ public class HardwarePushbot_TC
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.9;
     static final double     TURN_SPEED              = 0.3;
-    static final double CLAW_OPEN_POS = 0.43;
+    static final double CLAW_OPEN_POS = 0.31;
     static final double CLAW_CLOSE_POS = 0.10;
     static final double CLAWREACH_MAX_POS = 0.1;
-    static final double CLAWREACH_PICK_POS = 0.25;
+    static final double CLAWREACH_PICK_POS = 0.24;
     static final double CLAWREACH_PULLIN_P0S = 0.75;
     static final double ARMMOVEMENT_LOW = 5.75;
     static final double ARMMOVEMENT_MID = 9.3;
@@ -113,8 +113,8 @@ public class HardwarePushbot_TC
         ClawServo = hwMap.get(Servo.class, "Claw");
         ClawReachServo = hwMap.get(Servo.class, "ClawReach");
         CarouselServo = hwMap.get(CRServo.class, "Carousel");
-        CapPickServo = hwMap.get(Servo.class, "CapPick");
-        CapGrabClawServo= hwMap.get(Servo.class, "CapGrabClaw");
+    //    CapPickServo = hwMap.get(Servo.class, "CapPick");
+       // CapGrabClawServo= hwMap.get(Servo.class, "CapGrabClaw");
 
 
         frontLeft.setDirection(DcMotorEx.Direction.REVERSE); // Set to REVERSE if using AndyMark motors

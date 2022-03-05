@@ -96,8 +96,8 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
     private DcMotor ArmReach = null;
     private Servo ClawServo = null;
     private Servo ClawReachServo = null;
-    private Servo CapPickServo = null;
-    private Servo CapGrabClawServo = null;
+    //private Servo CapPickServo = null;
+   // private Servo CapGrabClawServo = null;
    // private DistanceSensor sensorRange;
     static final double COUNTS_PER_MOTOR_REV = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 1;   // 1  // This is < 1.0 if geared UP
@@ -107,10 +107,10 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
 
     double  ArmSwiwelPosition = 0; // Start at halfway position
     boolean rampUp = true;
-    static final double CLAWREACH_PULLIN_P0S = 0.80;
+    static final double CLAWREACH_PULLIN_P0S = 0.75;
     static final double CLAWREACH_PICK_POS = 0.24;
-    static final double CLAW_OPEN_POS = 0.43;
-    static final double CLAW_CLOSE_POS = 0.20;
+    static final double CLAW_OPEN_POS = 0.31;
+    static final double CLAW_CLOSE_POS = 0.10;
     static final double CLAWREACH_MAX_POS = 0.1;
     static final double TOTAL_TIME_IN_SECONDS = 90;
     double driveboost= 0.75;
@@ -144,8 +144,8 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
         ClawReachServo = hardwareMap.get(Servo.class, "ClawReach");
         CarouselServo = hardwareMap.get(CRServo.class, "Carousel");
         CarouselBlueServo = hardwareMap.get(CRServo.class, "CarouselBlue");
-        CapPickServo = hardwareMap.get(Servo.class, "CapPick");
-        CapGrabClawServo= hardwareMap.get(Servo.class, "CapGrabClaw");
+      //  CapPickServo = hardwareMap.get(Servo.class, "CapPick");
+      //  CapGrabClawServo= hardwareMap.get(Servo.class, "CapGrabClaw");
 
 
        FrontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -275,16 +275,7 @@ public class Teleop_Mecanum_2022V1 extends LinearOpMode {
                 ClawServo.setPosition(position);
             }
 
-            if (gamepad1.right_bumper) {
-                CapPickServo.setPosition(0.85);
-                InLineEncoderDriveArm(ArmReach,0.2,5,15);
-                sleep(300);
-                InLineEncoderDriveArm(ArmReach,0.15,3.5,15);
-                CapPickServo.setPosition(0.2);
-            }
-            if(gamepad1.dpad_down){
-                CapGrabClawServo.setPosition(0.80);
-            }
+
 
 
             if (gamepad2.y) {
