@@ -216,7 +216,7 @@ public class AutoBlueRight extends LinearOpMode {
         carouselTimer.reset();
         carouselTimer.startTime();
 
-        while(carouselTimer.seconds() <= 3) {
+        while(carouselTimer.seconds() <= 3.5) {
             CarouselPosition= 1;
             robot.CarouselServo.setPower(CarouselPosition);
         }
