@@ -252,7 +252,7 @@ public class AutoBlueLeftInner extends LinearOpMode {
         encoderDriveInLine(0.5,-19,19,-19,19,5);
 
         //straffe to avoid barrier
-        encoderDriveInLine(0.2,-5.5,5.5,5.5,-5.5,4);
+        encoderDriveInLine(0.2,-6.5,6.5,6.5,-6.5,4);
 
         //move into warehouse
         encoderDriveInLine(0.5,55,55,55,55,8);

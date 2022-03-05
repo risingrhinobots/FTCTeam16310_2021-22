@@ -266,7 +266,7 @@ public class AutoRedRightOuter extends LinearOpMode {
         encoderDriveArmInLine(robot.ArmMotor, 0.2, ArmMovement, ArmMovementTimeout);
 
         //move into warehouse
-        encoderDriveInLine(0.5,55,55,55,55,5);
+        encoderDriveInLine(0.5,60,60,60,60,5);
 
 
         robot.ClawReachServo.setPosition(CLAWREACH_PICK_POS - 0.05);
